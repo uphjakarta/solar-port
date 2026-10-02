@@ -1,0 +1,939 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solar-Port Modular · Listrik padam, HP tetap hidup</title>
+<meta name="description" content="Prototipe Solar-Port Modular: panel surya tempel jendela, stop kontak, dan lampu darurat untuk penyewa rumah petak dan warung. Bayar Rp 1.250 sehari di warung.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F2F6F5; --surface:#FFFFFF; --surface-2:#E8EFEC; --ink:#13233A; --muted:#4F5E70; --line:#D3DEDA;
+  --lampu:#F2A31B; --lampu-ink:#13233A; --terpal:#1D63CC; --lcd:#9BD95A; --lcd-bg:#1E2C21; --danger:#B23A2E;
+  --display:"Bricolage Grotesque", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --body:"Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono:"Share Tech Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --r-s:8px; --r-m:14px; --r-l:22px;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1A2C; --surface:#16243A; --surface-2:#1C2D47; --ink:#E8EEF6; --muted:#A9B6C6; --line:#2A3B57;
+    --lampu:#FFC04D; --lampu-ink:#13233A; --terpal:#6EA4F5; --danger:#F08A7E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1A2C; --surface:#16243A; --surface-2:#1C2D47; --ink:#E8EEF6; --muted:#A9B6C6; --line:#2A3B57;
+  --lampu:#FFC04D; --lampu-ink:#13233A; --terpal:#6EA4F5; --danger:#F08A7E;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-behavior:smooth; scroll-padding-top:calc(env(safe-area-inset-top,0px) + 72px)}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none !important; animation:none !important} }
+body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--body); font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased}
+img,svg{max-width:100%}
+a{color:var(--terpal)}
+:focus-visible{outline:3px solid var(--terpal); outline-offset:3px; border-radius:6px}
+.wrap{max-width:1180px; margin:0 auto; padding:0 20px}
+h1,h2,h3{font-family:var(--display); line-height:1.08; margin:0; letter-spacing:-0.01em}
+h2{font-size:clamp(30px,4.2vw,46px); font-weight:800; max-width:20ch}
+h3{font-size:22px; font-weight:700}
+p{margin:0}
+.lead{font-size:clamp(17px,1.6vw,19px); color:var(--muted); max-width:60ch}
+section{padding:88px 0}
+.btn{display:inline-flex; align-items:center; justify-content:center; gap:10px; min-height:48px; padding:0 22px; border-radius:999px; border:2px solid transparent; font:600 16px/1 var(--body); cursor:pointer; text-decoration:none; transition:transform .15s ease, background .2s ease}
+.btn:active{transform:translateY(1px)}
+.btn-lampu{background:var(--lampu); color:var(--lampu-ink)}
+.btn-lampu:hover{filter:brightness(1.05)}
+.btn-garis{background:transparent; color:var(--ink); border-color:var(--ink)}
+.btn-garis:hover{background:var(--surface-2)}
+
+/* ---------- header ---------- */
+.atas{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border-bottom:1px solid var(--line)}
+.atas .wrap{display:flex; align-items:center; justify-content:space-between; gap:16px; min-height:64px}
+.merek{display:flex; align-items:center; gap:10px; font:800 21px/1 var(--display); color:var(--ink); text-decoration:none; white-space:nowrap}
+.merek svg{width:30px; height:30px}
+.navi{display:flex; gap:4px; flex-wrap:wrap}
+.navi a{color:var(--ink); text-decoration:none; font-weight:600; font-size:15px; padding:10px 12px; border-radius:999px}
+.navi a:hover{background:var(--surface-2)}
+.lencana{font-size:13px; font-weight:600; color:var(--muted); border:1px dashed var(--muted); border-radius:999px; padding:6px 12px; white-space:nowrap}
+@media (max-width:860px){ .navi{display:none} }
+@media (max-width:420px){ .lencana{font-size:12px; padding:5px 10px} }
+
+/* ---------- hero ---------- */
+.hero{padding:48px 0 0}
+.hero-atas{display:grid; grid-template-columns:1.25fr 1fr; gap:28px; align-items:end}
+.hero h1{font-size:clamp(42px,7vw,88px); font-weight:800; letter-spacing:-0.02em; max-width:12ch}
+.hero .lead{margin-top:18px}
+.hero-aksi{display:flex; flex-wrap:wrap; gap:12px; margin-top:26px}
+.harga-kecil{font-size:15px; color:var(--muted); margin-top:16px}
+.harga-kecil strong{color:var(--ink)}
+@media (max-width:860px){ .hero-atas{grid-template-columns:1fr} }
+@media (max-width:600px){ .hero-petunjuk{display:none} }
+
+.panggung{position:relative; margin-top:36px; border-radius:var(--r-l); overflow:hidden; border:1px solid var(--line); background:#24375A}
+.panggung svg{display:block; width:100%; height:auto}
+.saklar-wadah{position:absolute; left:20px; top:20px; display:flex; align-items:center; gap:12px; background:rgba(255,255,255,.92); color:#13233A; padding:10px 14px 10px 10px; border-radius:16px; box-shadow:0 6px 20px rgba(10,20,40,.18)}
+.saklar{appearance:none; width:64px; height:84px; border-radius:12px; border:2px solid #C8D1D9; background:linear-gradient(#FBFCFD,#E9EEF2); position:relative; cursor:pointer; padding:0}
+.saklar .rocker{position:absolute; left:10px; right:10px; top:10px; height:60px; border-radius:8px; background:#fff; border:1px solid #C8D1D9; overflow:hidden}
+.saklar .rocker::before{content:""; position:absolute; left:0; right:0; height:50%; top:0; background:linear-gradient(#FFFFFF,#E3E8ED); transition:all .25s ease}
+.saklar[aria-pressed="true"] .rocker::before{top:50%; background:linear-gradient(#E3E8ED,#FFFFFF)}
+.saklar .titik{position:absolute; left:50%; transform:translateX(-50%); width:8px; height:8px; border-radius:50%; bottom:4px; background:#F2A31B; transition:background .25s ease}
+.saklar[aria-pressed="true"] .titik{background:#9AA6B2}
+.saklar-teks{display:flex; flex-direction:column; line-height:1.25}
+.saklar-teks b{font-family:var(--display); font-size:18px}
+.saklar-teks span{font-size:13px; color:#4F5E70}
+.saklar.colek{animation:colek 1.6s ease 2}
+@keyframes colek{0%,100%{box-shadow:0 0 0 0 rgba(242,163,27,.0)}50%{box-shadow:0 0 0 10px rgba(242,163,27,.35)}}
+.status{display:flex; align-items:flex-start; gap:12px; padding:16px 20px; font-weight:600; background:var(--surface); border:1px solid var(--line); border-top:0; border-radius:0 0 var(--r-l) var(--r-l); margin-top:-1px}
+.status .bulat{flex:none; width:12px; height:12px; border-radius:50%; background:var(--lampu); margin-top:7px; box-shadow:0 0 0 4px color-mix(in srgb, var(--lampu) 25%, transparent)}
+html[data-pln="off"] .status .bulat{background:#7E8A98; box-shadow:none}
+@media (max-width:600px){ .saklar-wadah{position:static; border-radius:0; box-shadow:none; padding:10px 14px; background:#F4F7FA; border-bottom:1px solid #D3DEDA} .saklar{width:48px; height:64px} .saklar .rocker{left:8px; right:8px; top:8px; height:44px} }
+
+/* scene states */
+#adegan .gelap{opacity:0; transition:opacity .7s ease}
+#adegan .sinar{opacity:0; transition:opacity .7s ease .15s}
+#adegan .jendela-pln{transition:fill .5s ease}
+#adegan .kota-lampu{transition:opacity .5s ease}
+#adegan .bulan,#adegan .bintang{transition:opacity .7s ease}
+html[data-pln="off"] #adegan .gelap{opacity:.62}
+html[data-pln="off"] #adegan .sinar{opacity:1}
+html[data-pln="off"] #adegan .jendela-pln{fill:#2B3550}
+html[data-pln="off"] #adegan .kota-lampu{opacity:0}
+.sinar-pulse{animation:denyut 3.2s ease-in-out infinite}
+@keyframes denyut{0%,100%{opacity:.85}50%{opacity:1}}
+
+/* ---------- struk fakta ---------- */
+.dua{display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start}
+@media (max-width:860px){ .dua{grid-template-columns:1fr; gap:32px} }
+.struk{background:#FFFDF6; color:#1E2328; font-family:var(--mono); font-size:15px; line-height:1.5; padding:26px 24px 30px; border-radius:6px; max-width:460px; position:relative; box-shadow:0 1px 0 #E3DFD2, 0 18px 30px -18px rgba(20,30,40,.35); transform:rotate(-1.2deg)}
+.struk::after{content:""; position:absolute; left:0; right:0; bottom:-10px; height:12px; background:radial-gradient(circle at 8px -2px, transparent 8px, #FFFDF6 8.5px) 0 0/16px 12px repeat-x}
+.struk h3{font-family:var(--mono); font-size:16px; font-weight:400; text-align:center; letter-spacing:.06em}
+.struk .garis{border-top:1px dashed #9BA3AA; margin:12px 0}
+.struk .baris{display:flex; justify-content:space-between; gap:12px}
+.struk .baris b{font-weight:400; white-space:nowrap}
+.struk small{display:block; color:#5E6670; font-size:12.5px; line-height:1.45}
+.cerita p+p{margin-top:16px}
+.cerita .lead{color:var(--ink)}
+
+/* ---------- produk ---------- */
+.produk-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:40px; align-items:center; margin-top:36px}
+@media (max-width:860px){ .produk-grid{grid-template-columns:1fr} }
+.diagram{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-l); padding:18px}
+.diagram svg{display:block; width:100%; height:auto}
+.diagram .bagian{transition:opacity .25s ease}
+.diagram.fokus .bagian{opacity:.28}
+.diagram.fokus .bagian.aktif{opacity:1}
+.daftar-bagian{display:flex; flex-direction:column; gap:10px}
+.bagian-btn{display:flex; gap:14px; align-items:flex-start; text-align:left; width:100%; padding:14px 16px; border-radius:var(--r-m); background:var(--surface); color:var(--ink); border:1px solid var(--line); cursor:pointer; font:inherit}
+.bagian-btn:hover{border-color:var(--muted)}
+.bagian-btn[aria-pressed="true"]{border-color:var(--lampu); box-shadow:inset 4px 0 0 var(--lampu)}
+.bagian-btn .ikon{flex:none; width:40px; height:40px; border-radius:10px; background:var(--surface-2); display:grid; place-items:center}
+.bagian-btn .ikon svg{width:22px; height:22px; stroke:var(--ink)}
+.bagian-btn b{display:block; font-family:var(--display); font-size:18px}
+.bagian-btn span{display:block; color:var(--muted); font-size:15px; line-height:1.45}
+.jujur{margin-top:26px; padding:18px 20px; border-radius:var(--r-m); background:var(--surface-2); border:1px solid var(--line)}
+.jujur b{font-family:var(--display)}
+
+/* ---------- kalkulator ---------- */
+.kalk{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:36px}
+@media (max-width:860px){ .kalk{grid-template-columns:1fr} }
+.kartu{background:var(--surface); border:1px solid var(--line); border-radius:var(--r-l); padding:24px}
+fieldset{border:0; margin:0 0 22px; padding:0}
+legend{font-weight:700; margin-bottom:10px; padding:0}
+.pilihan{display:flex; flex-wrap:wrap; gap:8px}
+.pilihan input{position:absolute; opacity:0; width:1px; height:1px}
+.pilihan label{min-height:44px; display:inline-flex; align-items:center; padding:0 16px; border-radius:999px; border:1.5px solid var(--line); background:var(--bg); cursor:pointer; font-weight:600; font-size:15px}
+.pilihan input:checked + label{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.pilihan input:focus-visible + label{outline:3px solid var(--terpal); outline-offset:2px}
+.stepper{display:inline-flex; align-items:center; gap:4px; border:1.5px solid var(--line); border-radius:999px; padding:4px}
+.stepper button{width:40px; height:40px; border-radius:50%; border:0; background:var(--surface-2); color:var(--ink); font:700 20px/1 var(--body); cursor:pointer}
+.stepper output{min-width:56px; text-align:center; font:700 18px/1 var(--display)}
+.rentang{display:flex; align-items:center; gap:14px}
+input[type=range]{flex:1; accent-color:var(--lampu); height:28px}
+.rentang output{min-width:72px; font:700 18px/1 var(--display); text-align:right}
+.hasil-angka{font:800 clamp(40px,6vw,60px)/1 var(--display); letter-spacing:-0.02em}
+.hasil-label{color:var(--muted); font-size:15px; margin-top:6px}
+.batang{margin-top:22px; height:18px; border-radius:999px; background:var(--surface-2); overflow:hidden; display:flex}
+.batang span{display:block; height:100%; transition:width .35s ease}
+.batang .b-lampu{background:var(--lampu)}
+.batang .b-hp{background:var(--terpal)}
+.legenda{display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; font-size:14px; color:var(--muted)}
+.legenda i{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle}
+.saran{margin-top:22px; padding-top:18px; border-top:1px dashed var(--line); font-size:16px}
+.saran b{font-family:var(--display)}
+.catatan{font-size:14px; color:var(--muted); margin-top:14px}
+
+/* ---------- PAYGo ---------- */
+.paygo{display:grid; grid-template-columns:minmax(260px,380px) 1fr; gap:40px; margin-top:36px; align-items:start}
+@media (max-width:860px){ .paygo{grid-template-columns:1fr} }
+.modul{background:linear-gradient(#FAFBFC,#E8EDF1); border:2px solid #CBD4DC; border-radius:26px; padding:20px; color:#13233A; box-shadow:0 20px 40px -24px rgba(10,20,40,.45)}
+.lcd{background:var(--lcd-bg); color:var(--lcd); font-family:var(--mono); border-radius:10px; padding:14px 16px; min-height:96px; box-shadow:inset 0 2px 8px rgba(0,0,0,.5)}
+.lcd .besar{font-size:26px; line-height:1.2; letter-spacing:.04em}
+.lcd .kecil{font-size:14px; opacity:.85; margin-top:6px}
+.lcd .ketik{font-size:20px; margin-top:6px; letter-spacing:.3em; min-height:26px}
+.lcd.terkunci{color:#F2A31B}
+.colokan{display:flex; justify-content:space-between; align-items:center; margin:16px 4px}
+.colokan .usb{display:flex; gap:10px}
+.colokan .usb span{width:30px; height:12px; border-radius:3px; background:#2B3746; display:block}
+.colokan .ac{width:54px; height:54px; border-radius:50%; background:#DDE3E8; border:2px solid #C3CCD4; position:relative}
+.colokan .ac::before,.colokan .ac::after{content:""; position:absolute; top:20px; width:8px; height:14px; border-radius:4px; background:#2B3746}
+.colokan .ac::before{left:14px}.colokan .ac::after{right:14px}
+.pad{display:grid; grid-template-columns:repeat(3,1fr); gap:8px}
+.pad button{min-height:48px; border-radius:12px; border:1px solid #C3CCD4; background:#fff; color:#13233A; font:700 20px/1 var(--display); cursor:pointer}
+.pad button:hover{background:#F2F5F7}
+.pad .ok{background:#13233A; color:#fff; border-color:#13233A; font-size:16px}
+.pad .hapus{font-size:15px}
+.led{height:8px; border-radius:6px; margin-top:16px; background:#C9D1D8; transition:background .3s ease, box-shadow .3s ease}
+.led.nyala{background:#FFD86B; box-shadow:0 0 18px 4px rgba(255,200,80,.55)}
+.paygo-kanan .aksi{display:flex; gap:10px; flex-wrap:wrap}
+.sms{margin-top:18px; max-width:420px; background:var(--surface); border:1px solid var(--line); border-radius:18px 18px 18px 4px; padding:14px 16px; min-height:64px}
+.sms small{display:block; color:var(--muted); font-size:13px}
+.sms .kode{font:700 26px/1.2 var(--mono); letter-spacing:.18em}
+.kemajuan{margin-top:22px}
+.kemajuan .jalur{height:12px; background:var(--surface-2); border-radius:999px; overflow:hidden}
+.kemajuan .isi{height:100%; width:0; background:var(--lampu); transition:width .35s ease}
+.kemajuan .teks{display:flex; justify-content:space-between; gap:12px; font-size:14px; color:var(--muted); margin-top:8px}
+.langkah{list-style:none; padding:0; margin:26px 0 0; display:grid; gap:14px; counter-reset:l}
+.langkah li{counter-increment:l; display:grid; grid-template-columns:40px 1fr; gap:14px; align-items:start}
+.langkah li::before{content:counter(l); width:40px; height:40px; border-radius:50%; display:grid; place-items:center; background:var(--ink); color:var(--bg); font:800 18px/1 var(--display)}
+.langkah b{display:block}
+.langkah span{color:var(--muted); font-size:15px}
+.pesan{margin-top:12px; font-weight:600; min-height:26px}
+.pesan.salah{color:var(--danger)}
+
+/* ---------- warung ---------- */
+.warung-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:36px; align-items:start}
+@media (max-width:860px){ .warung-grid{grid-template-columns:1fr} }
+.cek{display:flex; align-items:center; gap:12px; min-height:44px; cursor:pointer; font-weight:600}
+.cek input{width:22px; height:22px; accent-color:var(--lampu)}
+.dimatikan{opacity:.45}
+.struk.pendapatan{transform:rotate(1deg); max-width:none}
+.struk .total{font-size:20px}
+
+/* ---------- paket ---------- */
+.label-harga{display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:48px; align-items:start}
+@media (max-width:900px){ .label-harga{grid-template-columns:1fr; max-width:440px} }
+.tag{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:12px 12px 22px 22px; padding:40px 24px 26px; transform:rotate(var(--rot,0deg)); transform-origin:50% 0}
+.tag::before{content:""; position:absolute; top:14px; left:50%; width:14px; height:14px; margin-left:-7px; border-radius:50%; background:var(--bg); border:2px solid var(--line)}
+.tag::after{content:""; position:absolute; top:-26px; left:50%; width:2px; height:42px; background:var(--muted); opacity:.55}
+.tag h3{font-size:24px}
+.tag .harga{font:800 34px/1.05 var(--display); margin-top:12px; letter-spacing:-0.01em}
+.tag .sub{color:var(--muted); font-size:15px; margin-top:6px}
+.tag ul{list-style:none; padding:0; margin:18px 0 0; display:grid; gap:8px; font-size:15px}
+.tag li{display:flex; gap:10px}
+.tag li svg{flex:none; width:18px; height:18px; margin-top:3px; stroke:var(--terpal)}
+.tag.utama{border:2px solid var(--lampu)}
+
+/* ---------- jujur list ---------- */
+.dua-kolom{display:grid; grid-template-columns:1fr 1fr; gap:14px 36px; margin-top:32px; list-style:none; padding:0}
+@media (max-width:760px){ .dua-kolom{grid-template-columns:1fr} }
+.dua-kolom li{display:flex; gap:12px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--line)}
+.dua-kolom svg{flex:none; width:22px; height:22px; margin-top:2px}
+.ya svg{stroke:var(--terpal)} .tidak svg{stroke:var(--danger)}
+
+/* ---------- FAQ ---------- */
+.tanya{max-width:820px; margin-top:28px}
+details{border-bottom:1px solid var(--line)}
+summary{cursor:pointer; list-style:none; padding:20px 44px 20px 0; font:700 19px/1.35 var(--display); position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:""; position:absolute; right:8px; top:50%; width:12px; height:12px; border-right:2.5px solid var(--ink); border-bottom:2.5px solid var(--ink); transform:translateY(-70%) rotate(45deg); transition:transform .2s ease}
+details[open] summary::after{transform:translateY(-30%) rotate(-135deg)}
+details p{padding:0 0 20px; color:var(--muted); max-width:66ch}
+
+/* ---------- mitra ---------- */
+.mitra{display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start}
+@media (max-width:860px){ .mitra{grid-template-columns:1fr} }
+.isian{display:grid; gap:16px}
+.isian label{font-weight:600; display:block; margin-bottom:6px}
+.isian input,.isian select{width:100%; min-height:48px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); font:inherit}
+.balasan{margin-top:18px; padding:18px 20px; border-radius:var(--r-m); background:var(--surface-2); border:1px solid var(--line)}
+.balasan ol{margin:10px 0 0; padding-left:22px}
+
+/* ---------- footer ---------- */
+footer{padding:56px 0 64px; border-top:1px solid var(--line); background:var(--surface)}
+footer .kolom{display:grid; grid-template-columns:1.2fr 1fr; gap:40px}
+@media (max-width:860px){ footer .kolom{grid-template-columns:1fr} }
+footer p,footer li{color:var(--muted); font-size:14.5px}
+footer ul{padding-left:18px; margin:10px 0 0}
+footer h3{font-size:18px; margin-bottom:8px}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+</style>
+</head>
+<body>
+
+<header class="atas">
+  <div class="wrap">
+    <a class="merek" href="#atas" aria-label="Solar-Port, kembali ke atas">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="5" width="18" height="22" rx="3" fill="#1D63CC"/><path d="M7 11h10M7 16h10M7 21h10M12 8v16" stroke="#9CC4FF" stroke-width="1.4"/><rect x="22" y="13" width="7" height="12" rx="2" fill="#F2A31B"/><path d="M21 19h1" stroke="#13233A" stroke-width="2"/></svg>
+      Solar-Port
+    </a>
+    <nav class="navi" aria-label="Navigasi utama">
+      <a href="#hitung">Hitung</a>
+      <a href="#bayar">Cara bayar</a>
+      <a href="#warung">Untuk warung</a>
+      <a href="#paket">Paket</a>
+      <a href="#tanya">Tanya jawab</a>
+    </nav>
+    <span class="lencana">Prototipe tugas kuliah</span>
+  </div>
+</header>
+
+<main id="atas">
+<!-- ================= HERO ================= -->
+<section class="hero" aria-labelledby="judul">
+  <div class="wrap">
+    <div class="hero-atas">
+      <div>
+        <h1 id="judul">Listrik padam, HP tetap hidup.</h1>
+        <p class="lead">Solar-Port menempel di kaca jendela, menyimpan sinar matahari, dan menyalakan lampu sendiri saat listrik PLN atau token habis. Dipasang sendiri tanpa bor, cocok untuk rumah kontrakan.</p>
+        <div class="hero-aksi">
+          <button class="btn btn-lampu" type="button" id="tombol-padam">Coba matikan listrik</button>
+          <a class="btn btn-garis" href="#hitung">Hitung untuk rumahmu</a>
+        </div>
+        <p class="harga-kecil"><strong>Rp 1.250 sehari</strong>, dibayar di warung dekat rumah. Setelah 12 bulan, kit jadi milikmu.</p>
+      </div>
+      <p class="lead hero-petunjuk" style="max-width:38ch">Tekan saklar di gambar. Rumah yang memakai Solar-Port tetap terang, dan pengemudi ojol di depan warung tetap bisa mengecas HP.</p>
+    </div>
+
+    <div class="panggung">
+      <div class="saklar-wadah">
+        <button class="saklar" id="saklar" type="button" aria-pressed="false" aria-describedby="status-teks">
+          <span class="rocker"></span><span class="titik"></span>
+          <span class="sr">Listrik PLN</span>
+        </button>
+        <div class="saklar-teks" aria-hidden="true"><b id="saklar-label">PLN nyala</b><span>Tekan untuk padam</span></div>
+      </div>
+
+      <svg id="adegan" viewBox="0 0 1200 520" role="img" aria-labelledby="adegan-judul adegan-desk">
+        <title id="adegan-judul">Gang rumah petak dan warung di sore hari</title>
+        <desc id="adegan-desk">Empat rumah petak dan sebuah warung berdampingan di gang dengan kabel listrik semrawut. Dua rumah dan warung memasang panel Solar-Port di kaca jendela.</desc>
+        <defs>
+          <linearGradient id="langit" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E4A7A"/><stop offset=".65" stop-color="#7D86B8"/><stop offset="1" stop-color="#F0A77F"/></linearGradient>
+          <radialGradient id="cahaya" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#FFE8A3" stop-opacity=".95"/><stop offset=".55" stop-color="#FFD36B" stop-opacity=".35"/><stop offset="1" stop-color="#FFD36B" stop-opacity="0"/></radialGradient>
+          <pattern id="sel" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#1B3A6B"/><path d="M0 0H9V9" fill="none" stroke="#5F87C4" stroke-width=".8"/></pattern>
+        </defs>
+        <!-- langit -->
+        <rect width="1200" height="520" fill="url(#langit)"/>
+        <g class="bintang" fill="#fff" opacity=".8">
+          <circle cx="120" cy="40" r="1.6"/><circle cx="260" cy="70" r="1.2"/><circle cx="410" cy="34" r="1.5"/><circle cx="560" cy="60" r="1.1"/><circle cx="700" cy="28" r="1.4"/><circle cx="860" cy="52" r="1.2"/><circle cx="960" cy="22" r="1.5"/>
+        </g>
+        <g class="bulan"><circle cx="1070" cy="78" r="28" fill="#F6EFD8"/><circle cx="1082" cy="70" r="24" fill="#3A5287" opacity=".55"/></g>
+        <!-- kota di kejauhan -->
+        <g fill="#41557F">
+          <rect x="30" y="170" width="70" height="170"/><rect x="110" y="200" width="56" height="140"/><rect x="176" y="150" width="84" height="190"/><rect x="270" y="210" width="60" height="130"/>
+          <rect x="520" y="160" width="90" height="180"/><rect x="620" y="195" width="60" height="145"/><rect x="900" y="140" width="80" height="200"/><rect x="990" y="185" width="70" height="155"/><rect x="1070" y="165" width="90" height="175"/>
+        </g>
+        <g class="kota-lampu" fill="#FFE39A" opacity=".9">
+          <rect x="44" y="190" width="8" height="10"/><rect x="72" y="214" width="8" height="10"/><rect x="190" y="170" width="8" height="10"/><rect x="226" y="198" width="8" height="10"/><rect x="536" y="182" width="8" height="10"/><rect x="574" y="214" width="8" height="10"/><rect x="916" y="160" width="8" height="10"/><rect x="944" y="196" width="8" height="10"/><rect x="1088" y="186" width="8" height="10"/><rect x="1120" y="218" width="8" height="10"/>
+        </g>
+        <!-- tiang & kabel semrawut -->
+        <rect x="18" y="96" width="9" height="350" fill="#3B3F4A"/><rect x="2" y="112" width="44" height="6" fill="#3B3F4A"/>
+        <rect x="1174" y="96" width="9" height="350" fill="#3B3F4A"/><rect x="1158" y="112" width="44" height="6" fill="#3B3F4A"/>
+        <g fill="none" stroke="#1F2633" stroke-width="2.4" stroke-linecap="round">
+          <path d="M22 115 C 300 190, 900 190, 1178 115"/><path d="M22 120 C 350 215, 850 200, 1178 122"/>
+          <path d="M22 128 C 260 175, 620 230, 1178 130"/><path d="M40 115 C 380 165, 700 245, 1160 116"/>
+          <path d="M22 140 C 500 210, 760 180, 1178 150" stroke-width="1.6"/><path d="M300 175 C 330 205, 360 230, 352 262" stroke-width="1.6"/>
+          <path d="M760 190 C 790 210, 812 238, 806 270" stroke-width="1.6"/>
+        </g>
+        <!-- rumah 1 (PLN saja) -->
+        <g>
+          <polygon points="36,240 236,240 222,214 50,214" fill="#7C8794"/>
+          <rect x="44" y="240" width="186" height="200" fill="#A7DCC6"/>
+          <rect x="66" y="290" width="80" height="62" rx="3" fill="#F7F3EA"/><rect class="jendela-pln" x="71" y="295" width="70" height="52" fill="#FFE29A"/>
+          <path d="M106 295v52M71 321h70" stroke="#F7F3EA" stroke-width="3"/>
+          <rect x="164" y="300" width="46" height="140" fill="#6C4F3D"/><circle cx="200" cy="372" r="3" fill="#E9C37C"/>
+        </g>
+        <!-- rumah 2 (Solar-Port) -->
+        <g>
+          <polygon points="236,232 436,232 422,206 250,206" fill="#7C8794"/>
+          <rect x="244" y="232" width="186" height="208" fill="#F4B8C4"/>
+          <rect x="266" y="284" width="80" height="62" rx="3" fill="#F7F3EA"/><rect class="jendela-pln" x="271" y="289" width="70" height="52" fill="#FFE29A"/>
+          <rect x="276" y="294" width="30" height="42" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <rect x="364" y="294" width="46" height="146" fill="#5E7FA0"/><circle cx="400" cy="370" r="3" fill="#E9C37C"/>
+        </g>
+        <!-- rumah 3 (PLN saja) -->
+        <g>
+          <polygon points="436,246 636,246 622,220 450,220" fill="#7C8794"/>
+          <rect x="444" y="246" width="186" height="194" fill="#F5D776"/>
+          <rect x="466" y="296" width="80" height="62" rx="3" fill="#F7F3EA"/><rect class="jendela-pln" x="471" y="301" width="70" height="52" fill="#FFE29A"/>
+          <path d="M506 301v52M471 327h70" stroke="#F7F3EA" stroke-width="3"/>
+          <rect x="564" y="306" width="46" height="134" fill="#7A5A44"/><circle cx="600" cy="374" r="3" fill="#E9C37C"/>
+        </g>
+        <!-- rumah 4 (Solar-Port) -->
+        <g>
+          <polygon points="636,236 816,236 802,210 650,210" fill="#7C8794"/>
+          <rect x="644" y="236" width="166" height="204" fill="#9CC9EE"/>
+          <rect x="662" y="288" width="80" height="62" rx="3" fill="#F7F3EA"/><rect class="jendela-pln" x="667" y="293" width="70" height="52" fill="#FFE29A"/>
+          <rect x="672" y="298" width="30" height="42" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <rect x="756" y="300" width="40" height="140" fill="#6C4F3D"/><circle cx="788" cy="372" r="3" fill="#E9C37C"/>
+        </g>
+        <!-- warung -->
+        <g>
+          <rect x="826" y="250" width="320" height="190" fill="#E9EEF2"/>
+          <rect x="852" y="206" width="268" height="40" rx="4" fill="#13233A"/>
+          <text x="986" y="233" text-anchor="middle" font-family="Bricolage Grotesque, sans-serif" font-weight="800" font-size="22" fill="#F2A31B">WARUNG</text>
+          <path d="M818 250 H1154 V286 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 q-14 14 -28 0 Z" fill="#1D63CC"/>
+          <rect x="846" y="300" width="280" height="96" fill="#FFF2CC" class="jendela-pln"/>
+          <g fill="#D8634B"><rect x="860" y="312" width="16" height="24"/><rect x="880" y="312" width="16" height="24"/></g>
+          <g fill="#3E8E6C"><rect x="904" y="314" width="22" height="22"/><rect x="930" y="314" width="22" height="22"/></g>
+          <g fill="#F2A31B"><rect x="1062" y="312" width="14" height="26"/><rect x="1080" y="312" width="14" height="26"/><rect x="1098" y="312" width="14" height="26"/></g>
+          <rect x="964" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/><rect x="994" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/><rect x="1024" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <rect x="840" y="390" width="292" height="50" fill="#8C6B52"/><rect x="840" y="388" width="292" height="6" fill="#6C4F3D"/>
+          <g fill="#13233A"><rect x="902" y="364" width="12" height="22" rx="2"/><rect x="922" y="364" width="12" height="22" rx="2"/><rect x="942" y="364" width="12" height="22" rx="2"/></g>
+        </g>
+        <!-- jalan -->
+        <rect y="440" width="1200" height="80" fill="#5D6876"/><rect y="440" width="1200" height="6" fill="#4A5462"/>
+        <path d="M0 490 H1200" stroke="#8994A1" stroke-width="3" stroke-dasharray="26 22"/>
+        <!-- ojol -->
+        <g>
+          <circle cx="1010" cy="468" r="18" fill="#1F2633"/><circle cx="1010" cy="468" r="7" fill="#9AA6B2"/>
+          <circle cx="1108" cy="468" r="18" fill="#1F2633"/><circle cx="1108" cy="468" r="7" fill="#9AA6B2"/>
+          <path d="M992 456 L1030 432 H1090 L1112 454 Z" fill="#C7463A"/><rect x="1026" y="424" width="56" height="12" rx="6" fill="#1F2633"/>
+          <path d="M1048 424 l-8 -46 h28 l6 46 Z" fill="#2C7A7B"/><circle cx="1058" cy="366" r="13" fill="#7A5A44"/><path d="M1044 362 a14 14 0 0 1 28 0 v4 h-28 Z" fill="#E9EEF2"/>
+          <rect x="1068" y="384" width="9" height="15" rx="2" fill="#13233A"/>
+        </g>
+        <!-- gelap (lapisan saat padam) -->
+        <rect class="gelap" width="1200" height="520" fill="#050B18"/>
+        <!-- sinar Solar-Port (di atas lapisan gelap) -->
+        <g class="sinar">
+          <ellipse cx="306" cy="315" rx="110" ry="80" fill="url(#cahaya)" class="sinar-pulse"/>
+          <rect x="271" y="289" width="70" height="52" fill="#FFE29A"/><rect x="276" y="294" width="30" height="42" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <rect x="268" y="282" width="76" height="4" rx="2" fill="#FFF6D6"/>
+          <ellipse cx="702" cy="319" rx="110" ry="80" fill="url(#cahaya)" class="sinar-pulse"/>
+          <rect x="667" y="293" width="70" height="52" fill="#FFE29A"/><rect x="672" y="298" width="30" height="42" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <rect x="664" y="286" width="76" height="4" rx="2" fill="#FFF6D6"/>
+          <ellipse cx="986" cy="350" rx="190" ry="100" fill="url(#cahaya)" class="sinar-pulse"/>
+          <rect x="846" y="300" width="280" height="96" fill="#FFF2CC"/>
+          <g fill="#D8634B"><rect x="860" y="312" width="16" height="24"/><rect x="880" y="312" width="16" height="24"/></g><g fill="#3E8E6C"><rect x="904" y="314" width="22" height="22"/><rect x="930" y="314" width="22" height="22"/></g><g fill="#F2A31B"><rect x="1062" y="312" width="14" height="26"/><rect x="1080" y="312" width="14" height="26"/><rect x="1098" y="312" width="14" height="26"/></g>
+          <rect x="964" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/><rect x="994" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/><rect x="1024" y="306" width="24" height="34" fill="url(#sel)" stroke="#0E2547" stroke-width="1.5"/>
+          <g fill="#13233A"><rect x="902" y="364" width="12" height="22" rx="2"/><rect x="922" y="364" width="12" height="22" rx="2"/><rect x="942" y="364" width="12" height="22" rx="2"/></g>
+          <g fill="#9BD95A"><rect x="904" y="367" width="8" height="4"/><rect x="924" y="367" width="8" height="4"/><rect x="944" y="367" width="8" height="4"/></g>
+          <rect x="1068" y="384" width="9" height="15" rx="2" fill="#13233A"/><rect x="1069.5" y="386" width="6" height="10" fill="#9CC4FF"/>
+          <ellipse cx="1072" cy="391" rx="18" ry="14" fill="url(#cahaya)" opacity=".6"/>
+        </g>
+      </svg>
+    </div>
+    <p class="status" aria-live="polite"><span class="bulat" aria-hidden="true"></span><span id="status-teks">Listrik PLN menyala. Semua rumah dan warung memakai listrik PLN seperti biasa.</span></p>
+  </div>
+</section>
+
+<!-- ================= MASALAH ================= -->
+<section aria-labelledby="judul-masalah">
+  <div class="wrap dua">
+    <div class="cerita">
+      <h2 id="judul-masalah">HP-nya ada. Listriknya yang rapuh.</h2>
+      <p class="lead" style="margin-top:20px">Buat pengemudi ojol, buruh harian, pedagang, dan anak sekolah, HP adalah alat kerja dan belajar. Kalau HP mati, orderan, upah, atau tugas sekolah hari itu ikut hilang.</p>
+      <p class="lead">Saat token habis atau listrik padam, pilihan yang ada serba salah: lilin yang berisiko kebakaran, numpang cas berbayar di warung, atau sambungan liar yang berbahaya. Panel surya atap dan genset butuh jutaan rupiah, tukang, dan atap milik sendiri.</p>
+    </div>
+    <div class="struk" role="group" aria-labelledby="judul-struk">
+      <h3 id="judul-struk">Struk fakta listrik gang</h3>
+      <div class="garis"></div>
+      <div class="baris"><span>Penduduk punya HP (2024)</span><b>68,65%</b></div>
+      <small>BPS, Statistik Telekomunikasi Indonesia 2024</small>
+      <div class="garis"></div>
+      <div class="baris"><span>Padam besar di Jakarta, 2026</span><b>3 kali</b></div>
+      <small>9 April, 23 April, 3 Agustus. Investortrust, Katadata, Bisnis.com</small>
+      <div class="garis"></div>
+      <div class="baris"><span>Kebakaran saat blackout 2019</span><b>8</b></div>
+      <small>Diduga dari lilin. BPBD DKI, diberitakan Antara</small>
+      <div class="garis"></div>
+      <div class="baris"><span>Kebakaran Jakarta karena korsleting</span><b>90%</b></div>
+      <small>Wakil Gubernur DKI, diberitakan JawaPos 2025</small>
+      <div class="garis"></div>
+      <div class="baris"><span>Cicilan Solar-Port</span><b>Rp 1.250/hari</b></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PRODUK ================= -->
+<section aria-labelledby="judul-produk" style="background:var(--surface); border-block:1px solid var(--line)">
+  <div class="wrap">
+    <h2 id="judul-produk">Satu kit, lima bagian, nol bor.</h2>
+    <p class="lead" style="margin-top:16px">Pilih bagian untuk melihat fungsinya.</p>
+    <div class="produk-grid">
+      <div class="diagram" id="diagram">
+        <svg viewBox="0 0 520 380" role="img" aria-label="Diagram lima bagian Solar-Port: panel di kaca jendela, modul baterai berbentuk stop kontak, colokan, lampu LED, dan rel geser">
+          <!-- kaca jendela -->
+          <g class="bagian" data-b="panel">
+            <rect x="24" y="30" width="190" height="230" rx="6" fill="#DCEBF5" stroke="#8FA6B8" stroke-width="3"/>
+            <rect x="52" y="60" width="132" height="172" fill="url(#sel2)" stroke="#0E2547" stroke-width="2"/>
+            <circle cx="62" cy="70" r="6" fill="#B9C6D1"/><circle cx="174" cy="70" r="6" fill="#B9C6D1"/><circle cx="62" cy="222" r="6" fill="#B9C6D1"/><circle cx="174" cy="222" r="6" fill="#B9C6D1"/>
+          </g>
+          <defs><pattern id="sel2" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="#1B3A6B"/><path d="M0 0H14V14" fill="none" stroke="#5F87C4" stroke-width="1"/></pattern></defs>
+          <path d="M184 220 C 250 230, 270 120, 318 120" fill="none" stroke="#2B3746" stroke-width="4" class="bagian" data-b="modul"/>
+          <!-- rel -->
+          <g class="bagian" data-b="rel">
+            <rect x="300" y="70" width="34" height="250" rx="8" fill="#C7D0D8"/>
+            <path d="M309 80v230M325 80v230" stroke="#A9B4BE" stroke-width="2"/>
+          </g>
+          <!-- modul -->
+          <g class="bagian" data-b="modul">
+            <rect x="318" y="96" width="150" height="200" rx="20" fill="#F4F6F8" stroke="#B9C4CE" stroke-width="3"/>
+            <rect x="332" y="114" width="122" height="40" rx="6" fill="#1E2C21"/><text x="393" y="139" text-anchor="middle" font-family="Share Tech Mono, monospace" font-size="13" fill="#9BD95A">AKTIF 7 HARI</text>
+          </g>
+          <g class="bagian" data-b="colokan">
+            <rect x="344" y="172" width="22" height="10" rx="2" fill="#2B3746"/><rect x="374" y="172" width="22" height="10" rx="2" fill="#2B3746"/>
+            <circle cx="425" cy="222" r="26" fill="#DDE3E8" stroke="#C3CCD4" stroke-width="2"/><rect x="413" y="214" width="6" height="14" rx="3" fill="#2B3746"/><rect x="431" y="214" width="6" height="14" rx="3" fill="#2B3746"/>
+          </g>
+          <g class="bagian" data-b="led">
+            <rect x="320" y="300" width="160" height="12" rx="6" fill="#FFD86B"/>
+            <ellipse cx="400" cy="330" rx="110" ry="30" fill="#FFD86B" opacity=".25"/>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <div class="daftar-bagian" role="group" aria-label="Bagian Solar-Port">
+          <button class="bagian-btn" type="button" data-b="panel" aria-pressed="false">
+            <span class="ikon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M3 11h18M9 4v14M15 4v14"/></svg></span>
+            <span><b>Panel 15 watt di kaca</b><span>Menempel di sisi dalam kaca dengan karet hisap. Bisa dipindah ke jendela yang paling terang.</span></span>
+          </button>
+          <button class="bagian-btn" type="button" data-b="modul" aria-pressed="false">
+            <span class="ikon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="3"/><path d="M9 8h6M9 12h6"/></svg></span>
+            <span><b>Modul baterai 32 Wh</b><span>Baterai LiFePO4 yang lebih stabil terhadap panas, dengan pemutus beban lebih. Layarnya menunjukkan sisa hari aktif.</span></span>
+          </button>
+          <button class="bagian-btn" type="button" data-b="colokan" aria-pressed="false">
+            <span class="ikon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></svg></span>
+            <span><b>2 USB dan 1 stop kontak</b><span>Satu USB-C cepat untuk HP. Stop kontak maksimal 50 watt, cukup untuk charger atau kipas kecil.</span></span>
+          </button>
+          <button class="bagian-btn" type="button" data-b="led" aria-pressed="false">
+            <span class="ikon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg></span>
+            <span><b>Lampu LED otomatis</b><span>Menyala sendiri begitu listrik PLN atau token habis. Tidak perlu meraba-raba mencari lilin.</span></span>
+          </button>
+          <button class="bagian-btn" type="button" data-b="rel" aria-pressed="false">
+            <span class="ikon"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" aria-hidden="true"><path d="M8 3v18M16 3v18M8 8h8M8 16h8"/></svg></span>
+            <span><b>Rel geser tempel</b><span>Ditempel di dinding, modul tinggal digeser masuk. Pindah kontrakan? Lepas dan bawa.</span></span>
+          </button>
+        </div>
+        <p class="jujur"><b>Jujur soal kemampuannya.</b> Satu hari cerah menghasilkan sekitar 22 Wh dari balik kaca: cukup untuk kira-kira ¾ cas HP ditambah 6 jam lampu. Solar-Port menjaga HP dan lampu tetap hidup, bukan untuk memotong tagihan listrik.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= KALKULATOR ================= -->
+<section id="hitung" aria-labelledby="judul-hitung">
+  <div class="wrap">
+    <h2 id="judul-hitung">Cukup nggak untuk rumahmu?</h2>
+    <p class="lead" style="margin-top:16px">Isi sesuai keadaan rumahmu. Hasilnya perkiraan kasar dari rancangan produk, bukan janji.</p>
+    <div class="kalk">
+      <form class="kartu" id="form-energi" onsubmit="return false">
+        <fieldset>
+          <legend>Jendelamu menghadap ke mana?</legend>
+          <div class="pilihan">
+            <input type="radio" name="arah" id="arah-timur" value="1" checked><label for="arah-timur">Timur</label>
+            <input type="radio" name="arah" id="arah-barat" value="1"><label for="arah-barat">Barat</label>
+            <input type="radio" name="arah" id="arah-utara" value="0.65"><label for="arah-utara">Utara</label>
+            <input type="radio" name="arah" id="arah-selatan" value="0.65"><label for="arah-selatan">Selatan</label>
+            <input type="radio" name="arah" id="arah-teduh" value="0.35"><label for="arah-teduh">Terhalang bangunan</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Cuaca hari ini</legend>
+          <div class="pilihan">
+            <input type="radio" name="cuaca" id="cuaca-cerah" value="1" checked><label for="cuaca-cerah">Cerah</label>
+            <input type="radio" name="cuaca" id="cuaca-berawan" value="0.6"><label for="cuaca-berawan">Berawan</label>
+            <input type="radio" name="cuaca" id="cuaca-hujan" value="0.3"><label for="cuaca-hujan">Hujan</label>
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Berapa HP yang mau dicas?</legend>
+          <div class="stepper">
+            <button type="button" id="hp-kurang" aria-label="Kurangi jumlah HP">−</button>
+            <output id="hp-jumlah" aria-live="polite">1 HP</output>
+            <button type="button" id="hp-tambah" aria-label="Tambah jumlah HP">+</button>
+          </div>
+        </fieldset>
+        <fieldset style="margin-bottom:0">
+          <legend><label for="jam-lampu">Lampu menyala berapa jam semalam?</label></legend>
+          <div class="rentang">
+            <input type="range" id="jam-lampu" min="0" max="10" step="1" value="6">
+            <output for="jam-lampu" id="jam-teks">6 jam</output>
+          </div>
+        </fieldset>
+      </form>
+      <div class="kartu" aria-live="polite">
+        <div class="hasil-angka" id="hasil-wh">22 Wh</div>
+        <div class="hasil-label">perkiraan energi dari satu modul, hari ini</div>
+        <div class="batang" aria-hidden="true"><span class="b-lampu" id="bar-lampu"></span><span class="b-hp" id="bar-hp"></span></div>
+        <div class="legenda" aria-hidden="true"><span><i style="background:var(--lampu)"></i>untuk lampu</span><span><i style="background:var(--terpal)"></i>untuk HP</span></div>
+        <p class="saran" id="saran"></p>
+        <p class="catatan">Dasar hitungan: panel 15 W di balik kaca tegak menghasilkan sekitar 22 Wh pada hari cerah. Satu kali cas penuh HP butuh sekitar 22 Wh, lampu LED sekitar 1 Wh per jam. Baterai 32 Wh menyimpan sisa energi untuk hari berikutnya.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BAYAR HARIAN ================= -->
+<section id="bayar" aria-labelledby="judul-bayar" style="background:var(--surface); border-block:1px solid var(--line)">
+  <div class="wrap">
+    <h2 id="judul-bayar">Bayarnya harian, kayak beli pulsa.</h2>
+    <p class="lead" style="margin-top:16px">Coba sendiri: bayar di warung, terima kode lewat SMS, ketik di modul. Kalau lewat sehari tanpa bayar, kit cuma terkunci. Tidak ada denda, tidak ada penagih.</p>
+    <div class="paygo">
+      <div class="modul" aria-label="Simulasi modul Solar-Port">
+        <div class="lcd terkunci" id="lcd" aria-live="polite">
+          <div class="besar" id="lcd-besar">TERKUNCI</div>
+          <div class="kecil" id="lcd-kecil">Bayar di warung untuk mengaktifkan</div>
+          <div class="ketik" id="lcd-ketik" aria-label="Kode yang diketik"></div>
+        </div>
+        <div class="colokan" aria-hidden="true"><div class="usb"><span></span><span></span></div><div class="ac"></div></div>
+        <div class="pad" role="group" aria-label="Tombol angka modul">
+          <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+          <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+          <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+          <button type="button" class="hapus" data-k="hapus">Hapus</button><button type="button" data-k="0">0</button><button type="button" class="ok" data-k="ok">Masukkan</button>
+        </div>
+        <div class="led" id="led" aria-hidden="true"></div>
+      </div>
+      <div class="paygo-kanan">
+        <div class="aksi">
+          <button class="btn btn-lampu" type="button" id="bayar-1">Bayar 1 hari, Rp 1.250</button>
+          <button class="btn btn-garis" type="button" id="bayar-7">Bayar 7 hari, Rp 8.750</button>
+          <button class="btn btn-garis" type="button" id="lewat">Lewati sehari</button>
+        </div>
+        <div class="sms" aria-live="polite" id="sms"><small>SMS dari Solar-Port</small><span id="sms-isi">Belum ada pembayaran. Tekan tombol bayar di atas.</span></div>
+        <p class="pesan" id="pesan" aria-live="polite"></p>
+        <div class="kemajuan">
+          <div class="jalur" aria-hidden="true"><div class="isi" id="isi-lunas"></div></div>
+          <div class="teks"><span id="teks-lunas">0 dari 365 hari terbayar</span><span id="teks-sisa">Sisa Rp 456.250</span></div>
+        </div>
+        <ol class="langkah">
+          <li><span><b>Lihat demo di warung dekat rumah</b><span>Pemilik warung menunjukkan cara pasang dan cara kerjanya.</span></span></li>
+          <li><span><b>Bayar hari pertama, bawa pulang</b><span>Pasang sendiri dalam beberapa menit, tanpa alat.</span></span></li>
+          <li><span><b>Bayar harian atau mingguan</b><span>Tunai atau QRIS di warung, lalu kode datang lewat SMS.</span></span></li>
+          <li><span><b>Setelah 365 hari, kit jadi milikmu</b><span>Atau langsung milikmu kalau beli tunai Rp 325.000.</span></span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WARUNG ================= -->
+<section id="warung" aria-labelledby="judul-warung">
+  <div class="wrap">
+    <h2 id="judul-warung">Warung jadi pos cas, tetap buka saat padam.</h2>
+    <p class="lead" style="margin-top:16px">Warung menengah bawah adalah tempat jual dan tempat bayar Solar-Port, sekaligus bisa memakainya sendiri. Hitung kira-kira tambahan pemasukannya.</p>
+    <div class="warung-grid">
+      <form class="kartu" id="form-warung" onsubmit="return false">
+        <fieldset>
+          <legend><label for="w-pelanggan">Pelanggan cicilan aktif</label></legend>
+          <div class="rentang"><input type="range" id="w-pelanggan" min="0" max="60" value="20"><output for="w-pelanggan" id="w-pelanggan-teks">20 orang</output></div>
+        </fieldset>
+        <fieldset>
+          <legend><label for="w-tunai">Kit terjual tunai per bulan</label></legend>
+          <div class="rentang"><input type="range" id="w-tunai" min="0" max="10" value="2"><output for="w-tunai" id="w-tunai-teks">2 kit</output></div>
+        </fieldset>
+        <fieldset>
+          <legend>Pakai Paket Warung sendiri?</legend>
+          <label class="cek"><input type="checkbox" id="w-paket" checked> Ya, 3 modul jadi pos cas pangkalan ojol</label>
+        </fieldset>
+        <div id="w-cas-wadah">
+          <fieldset>
+            <legend><label for="w-cas">HP yang dicas per hari</label></legend>
+            <div class="rentang"><input type="range" id="w-cas" min="0" max="3" value="2"><output for="w-cas" id="w-cas-teks">2 HP</output></div>
+          </fieldset>
+          <fieldset style="margin-bottom:0">
+            <legend><label for="w-tarif">Tarif cas per HP (contoh, warung yang menentukan)</label></legend>
+            <div class="rentang"><input type="range" id="w-tarif" min="1000" max="3000" step="500" value="2000"><output for="w-tarif" id="w-tarif-teks">Rp 2.000</output></div>
+          </fieldset>
+        </div>
+      </form>
+      <div class="struk pendapatan" aria-live="polite">
+        <h3>Perkiraan pemasukan per bulan</h3>
+        <div class="garis"></div>
+        <div class="baris"><span>Komisi cicilan 10%</span><b id="r-komisi">Rp 75.000</b></div>
+        <small id="r-komisi-ket">20 pelanggan × Rp 125 × 30 hari</small>
+        <div class="baris" style="margin-top:8px"><span>Komisi penjualan tunai</span><b id="r-tunai">Rp 32.500</b></div>
+        <small id="r-tunai-ket">2 kit × Rp 16.250</small>
+        <div id="r-cas-blok">
+          <div class="baris" style="margin-top:8px"><span>Jasa cas HP</span><b id="r-cas">Rp 120.000</b></div>
+          <small id="r-cas-ket">2 HP × Rp 2.000 × 30 hari</small>
+          <div class="baris" style="margin-top:8px"><span>Cicilan Paket Warung</span><b id="r-paket">−Rp 112.500</b></div>
+          <small>3 modul × Rp 1.250 × 30 hari</small>
+        </div>
+        <div class="garis"></div>
+        <div class="baris total"><span>Total</span><b id="r-total">Rp 115.000</b></div>
+        <div class="garis"></div>
+        <small>Belum termasuk kopi dan jajanan yang dibeli pengemudi sambil menunggu, dan jam buka yang lebih panjang saat listrik padam. Warung tidak perlu modal. Tiga modul memberi sekitar 2 sampai 3 kali cas HP sehari.</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PAKET ================= -->
+<section id="paket" aria-labelledby="judul-paket" style="background:var(--surface); border-block:1px solid var(--line)">
+  <div class="wrap">
+    <h2 id="judul-paket">Pilih yang pas.</h2>
+    <div class="label-harga">
+      <article class="tag utama" style="--rot:-1.5deg" aria-labelledby="p1">
+        <h3 id="p1">Solar-Port Plus</h3>
+        <div class="harga">Rp 1.250/hari</div>
+        <div class="sub">selama 12 bulan, atau Rp 325.000 tunai</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Panel 15 W dan baterai 32 Wh</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>2 USB dan 1 stop kontak maks. 50 W</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Lampu LED yang menyala sendiri</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Garansi tukar 1 tahun</li>
+        </ul>
+      </article>
+      <article class="tag" style="--rot:1deg" aria-labelledby="p2">
+        <h3 id="p2">Solar-Port Lite</h3>
+        <div class="harga">Lewat program</div>
+        <div class="sub">CSR atau dana desa, untuk keluarga yang paling membutuhkan</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Panel dan baterai</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Lampu LED dan USB untuk HP</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Tanpa stop kontak, lebih aman</li>
+        </ul>
+      </article>
+      <article class="tag" style="--rot:-0.6deg" aria-labelledby="p3">
+        <h3 id="p3">Paket Warung</h3>
+        <div class="harga">Rp 3.750/hari</div>
+        <div class="sub">3 modul dipasang berdampingan</div>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>6 USB dan 3 stop kontak</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>3 lampu LED, warung tetap terang</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>Jadi pos cas pangkalan ojol</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= JUJUR & AMAN ================= -->
+<section aria-labelledby="judul-aman">
+  <div class="wrap">
+    <h2 id="judul-aman">Yang bisa, dan yang tidak.</h2>
+    <ul class="dua-kolom">
+      <li class="ya"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg><span>Menjaga HP dan lampu tetap hidup saat padam atau token habis.</span></li>
+      <li class="tidak"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Bukan penghemat tagihan listrik. Energinya sekitar 22 Wh sehari.</span></li>
+      <li class="ya"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg><span>Stop kontak untuk charger HP dan kipas kecil.</span></li>
+      <li class="tidak"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg><span>Tidak untuk rice cooker, setrika, atau kulkas.</span></li>
+      <li class="ya"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg><span>Baterai LiFePO4 dan pemutus beban lebih, karena 90% kebakaran di Jakarta berawal dari korsleting.</span></li>
+      <li class="ya"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.4" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg><span>Disertifikasi SNI sebelum dijual. Ini rencana, karena Solar-Port masih prototipe.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ================= TANYA JAWAB ================= -->
+<section id="tanya" aria-labelledby="judul-tanya" style="background:var(--surface); border-block:1px solid var(--line)">
+  <div class="wrap">
+    <h2 id="judul-tanya">Tanya jawab</h2>
+    <div class="tanya">
+      <details><summary>Apakah tagihan listrik saya jadi turun?</summary><p>Hampir tidak terasa. Satu modul menghasilkan sekitar 22 Wh sehari, setara listrik PLN senilai puluhan rupiah. Nilainya ada di HP dan lampu yang tetap hidup saat padam atau saat token habis.</p></details>
+      <details><summary>Saya ngontrak. Boleh dipasang?</summary><p>Boleh. Panel menempel di kaca dengan karet hisap, modul digantung di rel tempel. Tidak perlu bor, kabel, atau izin pemilik rumah. Saat pindah, lepas dan bawa.</p></details>
+      <details><summary>Bagaimana kalau saya telat bayar?</summary><p>Kit terkunci sampai kamu bayar lagi. Tidak ada denda dan tidak ada penagih. Bayar lagi di warung, masukkan kodenya, kit menyala kembali.</p></details>
+      <details><summary>Jendela saya jarang kena matahari.</summary><p>Energinya akan lebih kecil. Coba kalkulator di atas. Jendela yang menghadap timur atau barat biasanya paling baik, dan panel bisa dipindah ke jendela yang paling terang.</p></details>
+      <details><summary>Aman untuk rumah yang padat?</summary><p>Baterainya LiFePO4 yang lebih stabil terhadap panas, ada pemutus beban lebih, dan stop kontaknya dibatasi 50 watt. Produk akan diuji dan disertifikasi SNI sebelum dijual.</p></details>
+      <details><summary>Kapan kit jadi milik saya?</summary><p>Setelah 365 hari pembayaran, atau langsung kalau beli tunai Rp 325.000.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MITRA ================= -->
+<section aria-labelledby="judul-mitra">
+  <div class="wrap mitra">
+    <div>
+      <h2 id="judul-mitra">Warungmu mau jadi mitra?</h2>
+      <p class="lead" style="margin-top:16px">Mitra warung menjual kit, menerima pembayaran harian, dan mendapat komisi 10% dari setiap cicilan, tanpa modal.</p>
+    </div>
+    <form class="kartu isian" id="form-mitra" novalidate>
+      <div><label for="m-nama">Nama warung</label><input id="m-nama" name="nama" autocomplete="organization" required></div>
+      <div><label for="m-kel">Kelurahan</label><input id="m-kel" name="kelurahan" required></div>
+      <div><label for="m-pembeli">Pembeli per hari</label>
+        <select id="m-pembeli" name="pembeli"><option>Kurang dari 20</option><option selected>20 sampai 50</option><option>Lebih dari 50</option></select>
+      </div>
+      <button class="btn btn-lampu" type="submit">Kirim minat jadi mitra</button>
+      <p class="catatan" style="margin-top:0">Ini prototipe tugas kuliah. Isian tidak dikirim atau disimpan ke mana pun.</p>
+      <div class="balasan" id="balasan" hidden aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap kolom">
+    <div>
+      <h3>Solar-Port Modular</h3>
+      <p>Prototipe konsep untuk tugas Strategic Management, Universitas Pelita Harapan, oleh Kelompok 2: Filipo David Tamara, Jocelyn, Thoe Isabella Roseline Pramana Putri, Al Fahri Ratta, dan Muhammad Falah Erfano.</p>
+      <p style="margin-top:10px">Belum dijual dan belum menerima pesanan. Semua angka adalah perkiraan rancangan yang masih perlu diuji lewat pilot.</p>
+    </div>
+    <div>
+      <h3>Sumber data</h3>
+      <ul>
+        <li>BPS, Statistik Telekomunikasi Indonesia 2024</li>
+        <li>Investortrust dan Katadata (April 2026); Bisnis.com (Agustus 2026)</li>
+        <li>BPBD DKI, diberitakan Antara (Agustus 2019)</li>
+        <li>Wakil Gubernur DKI, diberitakan JawaPos (Juli 2025)</li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var root = document.documentElement;
+  var rp = function(n){ return 'Rp ' + Math.round(n).toLocaleString('id-ID'); };
+
+  /* ---------- saklar PLN ---------- */
+  var saklar = document.getElementById('saklar');
+  var label = document.getElementById('saklar-label');
+  var status = document.getElementById('status-teks');
+  var tombolPadam = document.getElementById('tombol-padam');
+  function setPLN(padam){
+    root.setAttribute('data-pln', padam ? 'off' : 'on');
+    saklar.setAttribute('aria-pressed', padam ? 'true' : 'false');
+    label.textContent = padam ? 'PLN padam' : 'PLN nyala';
+    saklar.nextElementSibling.querySelector('span').textContent = padam ? 'Tekan untuk menyalakan' : 'Tekan untuk padam';
+    tombolPadam.textContent = padam ? 'Nyalakan listrik lagi' : 'Coba matikan listrik';
+    status.textContent = padam
+      ? 'Listrik PLN padam. Dua rumah dan warung yang memakai Solar-Port tetap terang, dan pengemudi ojol tetap bisa mengecas HP.'
+      : 'Listrik PLN menyala. Semua rumah dan warung memakai listrik PLN seperti biasa.';
+  }
+  setPLN(false);
+  saklar.addEventListener('click', function(){ setPLN(saklar.getAttribute('aria-pressed') !== 'true'); });
+  tombolPadam.addEventListener('click', function(){
+    setPLN(saklar.getAttribute('aria-pressed') !== 'true');
+    document.querySelector('.panggung').scrollIntoView({behavior:'smooth', block:'center'});
+  });
+  setTimeout(function(){ if (saklar.getAttribute('aria-pressed') !== 'true') saklar.classList.add('colek'); }, 3500);
+
+  /* ---------- diagram produk ---------- */
+  var diagram = document.getElementById('diagram');
+  var tombolBagian = document.querySelectorAll('.bagian-btn');
+  tombolBagian.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var aktif = btn.getAttribute('aria-pressed') === 'true';
+      tombolBagian.forEach(function(b){ b.setAttribute('aria-pressed','false'); });
+      diagram.querySelectorAll('.bagian').forEach(function(g){ g.classList.remove('aktif'); });
+      if (aktif){ diagram.classList.remove('fokus'); return; }
+      btn.setAttribute('aria-pressed','true');
+      diagram.classList.add('fokus');
+      diagram.querySelectorAll('.bagian[data-b="' + btn.dataset.b + '"]').forEach(function(g){ g.classList.add('aktif'); });
+    });
+  });
+
+  /* ---------- kalkulator energi ---------- */
+  var hp = 1;
+  var hpOut = document.getElementById('hp-jumlah');
+  var jam = document.getElementById('jam-lampu');
+  function nilai(nama){ var el = document.querySelector('input[name="' + nama + '"]:checked'); return el ? parseFloat(el.value) : 1; }
+  function hitungEnergi(){
+    var E = 22 * nilai('arah') * nilai('cuaca');
+    var lampu = parseInt(jam.value, 10);
+    document.getElementById('jam-teks').textContent = lampu + ' jam';
+    hpOut.textContent = hp + ' HP';
+    document.getElementById('hasil-wh').textContent = (Math.round(E * 10) / 10).toLocaleString('id-ID') + ' Wh';
+    var untukLampu = Math.min(lampu, E);
+    var untukHP = Math.max(0, E - lampu);
+    var persen = Math.min(100, Math.round(untukHP / 22 / hp * 100));
+    document.getElementById('bar-lampu').style.width = (E > 0 ? untukLampu / E * 100 : 0) + '%';
+    document.getElementById('bar-hp').style.width = (E > 0 ? untukHP / E * 100 : 0) + '%';
+    var butuh = lampu + hp * 16.5;
+    var modul = Math.max(1, Math.ceil(butuh / Math.max(E, 0.1) - 0.05));
+    var satu = 'Satu modul memberi lampu ' + lampu + ' jam dan sekitar ' + persen + '% cas ' + (hp > 1 ? 'untuk tiap HP' : 'HP') + '.';
+    var teks;
+    if (lampu > E){
+      teks = '<b>Energinya kurang untuk lampu ' + lampu + ' jam.</b> Hari ini satu modul cukup untuk sekitar ' + Math.floor(E) + ' jam lampu. Baterai 32 Wh menyimpan sisa dari hari cerah sebelumnya; kalau bisa, pindahkan panel ke jendela yang lebih terang.';
+    } else if (modul <= 1){
+      teks = '<b>Satu modul cukup.</b> Lampu ' + lampu + ' jam, ditambah sekitar ' + persen + '% cas ' + (hp > 1 ? 'untuk tiap HP.' : 'HP-mu.');
+    } else if (modul <= 3){
+      teks = '<b>' + satu + '</b> Supaya ' + (hp > 1 ? 'tiap HP' : 'HP-mu') + ' dapat sekitar ¾ cas, butuh kira-kira ' + modul + ' modul, atau ' + rp(modul * 1250) + ' sehari.';
+    } else {
+      teks = '<b>' + satu + '</b> Untuk kebutuhan sebesar ini di jendela dan cuaca seperti ini, lebih masuk akal mengurangi jam lampu, memindahkan panel ke jendela yang lebih terang, atau memakai Paket Warung 3 modul.';
+    }
+    document.getElementById('saran').innerHTML = teks;
+  }
+  document.querySelectorAll('#form-energi input').forEach(function(el){ el.addEventListener('input', hitungEnergi); el.addEventListener('change', hitungEnergi); });
+  document.getElementById('hp-kurang').addEventListener('click', function(){ hp = Math.max(1, hp - 1); hitungEnergi(); });
+  document.getElementById('hp-tambah').addEventListener('click', function(){ hp = Math.min(4, hp + 1); hitungEnergi(); });
+  hitungEnergi();
+
+  /* ---------- simulasi bayar harian ---------- */
+  var aktif = 0, lunas = 0, kode = null, kodeHari = 0, ketik = '';
+  var lcd = document.getElementById('lcd'), lcdBesar = document.getElementById('lcd-besar'), lcdKecil = document.getElementById('lcd-kecil'), lcdKetik = document.getElementById('lcd-ketik');
+  var led = document.getElementById('led'), pesan = document.getElementById('pesan'), smsIsi = document.getElementById('sms-isi');
+  function tampil(){
+    if (lunas >= 365){ lcdBesar.textContent = 'LUNAS'; lcdKecil.textContent = 'Kit ini milikmu'; lcd.classList.remove('terkunci'); led.classList.add('nyala'); }
+    else if (aktif > 0){ lcdBesar.textContent = 'AKTIF ' + aktif + ' HARI'; lcdKecil.textContent = 'Lampu dan colokan menyala'; lcd.classList.remove('terkunci'); led.classList.add('nyala'); }
+    else { lcdBesar.textContent = 'TERKUNCI'; lcdKecil.textContent = 'Bayar di warung untuk mengaktifkan'; lcd.classList.add('terkunci'); led.classList.remove('nyala'); }
+    lcdKetik.textContent = ketik.replace(/./g, function(c){ return c; });
+    var p = Math.min(365, lunas);
+    document.getElementById('isi-lunas').style.width = (p / 365 * 100) + '%';
+    document.getElementById('teks-lunas').textContent = p + ' dari 365 hari terbayar';
+    document.getElementById('teks-sisa').textContent = p >= 365 ? 'Lunas' : 'Sisa ' + rp((365 - p) * 1250);
+  }
+  function bayar(hari){
+    if (lunas >= 365){ pesan.className = 'pesan'; pesan.textContent = 'Kit sudah lunas. Tidak perlu bayar lagi.'; return; }
+    hari = Math.min(hari, 365 - lunas);
+    kode = String(Math.floor(100000 + Math.random() * 900000));
+    kodeHari = hari; ketik = '';
+    smsIsi.innerHTML = 'Pembayaran ' + rp(hari * 1250) + ' untuk ' + hari + ' hari diterima. Kode: <span class="kode">' + kode + '</span>';
+    pesan.className = 'pesan'; pesan.textContent = 'Ketik kode dari SMS di tombol angka modul, lalu tekan Masukkan.';
+    tampil();
+  }
+  document.getElementById('bayar-1').addEventListener('click', function(){ bayar(1); });
+  document.getElementById('bayar-7').addEventListener('click', function(){ bayar(7); });
+  document.getElementById('lewat').addEventListener('click', function(){
+    if (lunas >= 365){ pesan.className = 'pesan'; pesan.textContent = 'Kit sudah lunas, jadi tetap menyala.'; return; }
+    aktif = Math.max(0, aktif - 1);
+    pesan.className = 'pesan';
+    pesan.textContent = aktif > 0 ? 'Sehari berlalu. Sisa ' + aktif + ' hari aktif.' : 'Sehari berlalu tanpa bayar. Kit terkunci, tanpa denda. Bayar lagi kapan saja.';
+    tampil();
+  });
+  document.querySelectorAll('.pad button').forEach(function(b){
+    b.addEventListener('click', function(){
+      var k = b.dataset.k;
+      if (k === 'hapus'){ ketik = ketik.slice(0, -1); }
+      else if (k === 'ok'){
+        if (!kode){ pesan.className = 'pesan salah'; pesan.textContent = 'Belum ada kode. Bayar dulu di warung.'; }
+        else if (ketik === kode){ aktif += kodeHari; lunas += kodeHari; pesan.className = 'pesan'; pesan.textContent = lunas >= 365 ? 'Kode benar. Cicilan lunas, kit ini milikmu.' : 'Kode benar. Kit aktif ' + aktif + ' hari.'; kode = null; ketik = ''; smsIsi.textContent = 'Kode sudah dipakai. Terima kasih sudah membayar.'; }
+        else { pesan.className = 'pesan salah'; pesan.textContent = 'Kode tidak cocok. Cek lagi angka di SMS.'; ketik = ''; }
+      }
+      else if (ketik.length < 6){ ketik += k; }
+      tampil();
+    });
+  });
+  tampil();
+
+  /* ---------- kalkulator warung ---------- */
+  var wp = document.getElementById('w-pelanggan'), wt = document.getElementById('w-tunai'), wk = document.getElementById('w-paket'), wc = document.getElementById('w-cas'), wr = document.getElementById('w-tarif');
+  function hitungWarung(){
+    var p = +wp.value, t = +wt.value, pakai = wk.checked, c = +wc.value, r = +wr.value;
+    document.getElementById('w-pelanggan-teks').textContent = p + ' orang';
+    document.getElementById('w-tunai-teks').textContent = t + ' kit';
+    document.getElementById('w-cas-teks').textContent = c + ' HP';
+    document.getElementById('w-tarif-teks').textContent = rp(r);
+    var komisi = p * 125 * 30, tunai = t * 16250, cas = pakai ? c * r * 30 : 0, paket = pakai ? 3750 * 30 : 0;
+    document.getElementById('r-komisi').textContent = rp(komisi);
+    document.getElementById('r-komisi-ket').textContent = p + ' pelanggan × Rp 125 × 30 hari';
+    document.getElementById('r-tunai').textContent = rp(tunai);
+    document.getElementById('r-tunai-ket').textContent = t + ' kit × Rp 16.250';
+    document.getElementById('r-cas').textContent = rp(cas);
+    document.getElementById('r-cas-ket').textContent = c + ' HP × ' + rp(r) + ' × 30 hari';
+    document.getElementById('r-paket').textContent = '−' + rp(paket);
+    document.getElementById('r-cas-blok').hidden = !pakai;
+    document.getElementById('w-cas-wadah').classList.toggle('dimatikan', !pakai);
+    wc.disabled = !pakai; wr.disabled = !pakai;
+    document.getElementById('r-total').textContent = rp(komisi + tunai + cas - paket);
+  }
+  [wp, wt, wk, wc, wr].forEach(function(el){ el.addEventListener('input', hitungWarung); el.addEventListener('change', hitungWarung); });
+  hitungWarung();
+
+  /* ---------- form mitra (simulasi) ---------- */
+  var form = document.getElementById('form-mitra'), balasan = document.getElementById('balasan');
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var nama = form.nama.value.trim(), kel = form.kelurahan.value.trim();
+    if (!nama || !kel){ balasan.hidden = false; balasan.innerHTML = '<b>Isi nama warung dan kelurahan dulu.</b>'; (nama ? form.kelurahan : form.nama).focus(); return; }
+    var aman = function(s){ return s.replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
+    balasan.hidden = false;
+    balasan.innerHTML = '<b>Terima kasih, ' + aman(nama) + ' di ' + aman(kel) + '.</b> Di versi nyata, langkah berikutnya:<ol><li>Tim datang melihat lokasi dan arah jendela warung.</li><li>Pelatihan 30 menit: cara demo, menerima bayaran, dan mengirim kode.</li><li>Kit demo dan stok awal dititipkan, tanpa modal.</li></ol>';
+  });
+})();
+</script>
+</body>
+</html>
