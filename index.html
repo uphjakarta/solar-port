@@ -57,10 +57,10 @@ section{padding:88px 0}
 .merek{display:flex; align-items:center; gap:10px; font:800 21px/1 var(--display); color:var(--ink); text-decoration:none; white-space:nowrap}
 .merek svg{width:30px; height:30px}
 .navi{display:flex; gap:4px; flex-wrap:wrap}
-.navi a{color:var(--ink); text-decoration:none; font-weight:600; font-size:15px; padding:10px 12px; border-radius:999px}
+.navi a{color:var(--ink); text-decoration:none; font-weight:600; font-size:14.5px; padding:10px 11px; border-radius:999px}
 .navi a:hover{background:var(--surface-2)}
 .lencana{font-size:13px; font-weight:600; color:var(--muted); border:1px dashed var(--muted); border-radius:999px; padding:6px 12px; white-space:nowrap}
-@media (max-width:860px){ .navi{display:none} }
+@media (max-width:1000px){ .navi{display:none} }
 @media (max-width:420px){ .lencana{font-size:12px; padding:5px 10px} }
 
 /* ---------- hero ---------- */
@@ -261,6 +261,138 @@ footer p,footer li{color:var(--muted); font-size:14.5px}
 footer ul{padding-left:18px; margin:10px 0 0}
 footer h3{font-size:18px; margin-bottom:8px}
 .sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+:root{--uang:#A85F00; --barang:#1D63CC; --data:#1F7A6B; --ok:#1F7A4D}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){--uang:#FFB547; --barang:#7DB0FF; --data:#5FD0B8; --ok:#6FD39B} }
+:root[data-theme="dark"]{--uang:#FFB547; --barang:#7DB0FF; --data:#5FD0B8; --ok:#6FD39B}
+.permukaan{background:var(--surface); border-block:1px solid var(--line)}
+.permukaan .kartu,.permukaan .diagram,.permukaan .bagian-btn,.permukaan .sms,.permukaan .tag,.permukaan .preset button,.permukaan .aliran-tombol button{background:var(--bg)}
+
+/* ---------- 24 jam ---------- */
+.sehari-kendali{display:flex; flex-wrap:wrap; gap:18px 40px; margin-top:28px}
+.sehari-kendali fieldset{margin:0}
+.sehari-geser{margin-top:20px}
+.sehari-geser .rentang output{min-width:84px}
+.sehari-grid{display:grid; grid-template-columns:minmax(260px,350px) 1fr; gap:24px; margin-top:20px; align-items:start}
+@media (max-width:900px){ .sehari-grid{grid-template-columns:1fr} }
+.jendela-mini{position:relative; height:200px; border-radius:var(--r-m); overflow:hidden; background:#9CC9EE; transition:background .4s ease}
+.jendela-mini[data-langit="fajar"]{background:linear-gradient(#5B6FA6,#F0B48A)}
+.jendela-mini[data-langit="senja"]{background:linear-gradient(#41508A,#F0A77F)}
+.jendela-mini[data-langit="malam"]{background:#142A4C}
+.jendela-mini .benda-langit{position:absolute; right:22px; top:18px; width:34px; height:34px; border-radius:50%; background:#FFD34D; box-shadow:0 0 22px 6px rgba(255,211,77,.5); transition:all .4s ease}
+.jendela-mini[data-langit="malam"] .benda-langit{background:#F6EFD8; box-shadow:inset -10px -4px 0 0 #3A5287}
+.jendela-mini[data-langit="fajar"] .benda-langit,.jendela-mini[data-langit="senja"] .benda-langit{top:110px; opacity:.85}
+.jendela-mini .tembok{position:absolute; left:0; right:0; bottom:0; height:150px; background:#F4B8C4}
+.jendela-mini .bingkai{position:absolute; left:50%; bottom:22px; width:156px; height:112px; margin-left:-78px; background:#F7F3EA; border-radius:6px; padding:7px}
+.jendela-mini .kaca{position:relative; width:100%; height:100%; background:#D8ECF8; border-radius:3px; transition:background .4s ease, box-shadow .4s ease}
+.jendela-mini[data-lampu="pln"] .kaca{background:#FFE29A; box-shadow:0 0 30px 6px rgba(255,214,110,.45)}
+.jendela-mini[data-lampu="led"] .kaca{background:#FFF1C2; box-shadow:0 0 34px 8px rgba(255,226,150,.6)}
+.jendela-mini[data-lampu="gelap"] .kaca{background:#1E2738}
+.jendela-mini[data-langit="malam"][data-lampu="mati"] .kaca{background:#2B3550}
+.jendela-mini .panel{position:absolute; left:8px; top:8px; width:44px; height:66px; border:1.5px solid #0E2547; background:linear-gradient(#5F87C4 1px, transparent 1px) 0 0/100% 11px, linear-gradient(90deg, #5F87C4 1px, transparent 1px) 0 0/11px 100%, #1B3A6B}
+.jendela-mini .strip{position:absolute; left:2px; right:2px; top:-11px; height:4px; border-radius:2px; background:#C9D1D8; transition:all .3s ease}
+.jendela-mini[data-lampu="led"] .strip{background:#FFE59A; box-shadow:0 0 14px 4px rgba(255,220,120,.7)}
+.jendela-mini .hp-mini{position:absolute; right:16px; bottom:12px; width:22px; height:38px; border-radius:5px; background:#13233A; display:none}
+.jendela-mini .hp-mini::after{content:""; position:absolute; left:4px; right:4px; top:5px; bottom:9px; border-radius:2px; background:#9CC4FF}
+.jendela-mini.cas .hp-mini{display:block}
+.baterai{display:flex; align-items:center; gap:16px; margin-top:18px}
+.baterai-badan{position:relative; width:118px; height:46px; border:3px solid var(--ink); border-radius:9px; padding:3px}
+.baterai-badan::after{content:""; position:absolute; right:-10px; top:12px; width:6px; height:16px; background:var(--ink); border-radius:0 3px 3px 0}
+.baterai-isi{height:100%; width:30%; border-radius:4px; background:#5DBB3F; transition:width .25s ease}
+.baterai-isi.rendah{background:var(--danger)}
+.baterai-angka{font:800 34px/1 var(--display)}
+.sehari-status{margin-top:14px; font-weight:600; min-height:52px}
+.grafik-sehari{display:block; width:100%; height:auto; margin-top:4px}
+.grafik-sehari .sumbu{font:12px var(--body); fill:var(--muted)}
+.grafik-sehari .garis-bantu{stroke:var(--line); stroke-width:1}
+.grafik-sehari .pita-siang{fill:var(--lampu); opacity:.12}
+.grafik-sehari .pita-padam{fill:var(--muted); opacity:.18}
+.grafik-sehari .label-padam{font:600 12px var(--body); fill:var(--muted)}
+.grafik-sehari .soc{fill:none; stroke:var(--terpal); stroke-width:3; stroke-linejoin:round}
+.grafik-sehari .pita-hp{fill:var(--terpal)}
+.grafik-sehari .pita-led{fill:var(--lampu)}
+.grafik-sehari .kursor{stroke:var(--ink); stroke-width:1.5; stroke-dasharray:4 3}
+.grafik-sehari .titik-kursor{fill:var(--ink)}
+.ringkas{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:14px}
+@media (max-width:520px){ .ringkas{grid-template-columns:1fr} }
+.ringkas div{padding:12px 14px; border-radius:var(--r-m); background:var(--surface-2)}
+.ringkas b{display:block; font:800 22px/1.15 var(--display)}
+.ringkas span{font-size:13.5px; color:var(--muted)}
+
+/* ---------- kenapa sekarang ---------- */
+.sekarang-grid{display:grid; grid-template-columns:1.15fr 1fr; gap:36px; margin-top:32px; align-items:start}
+@media (max-width:900px){ .sekarang-grid{grid-template-columns:1fr} }
+.satuan{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px}
+.satuan button{min-height:44px; padding:0 16px; border-radius:999px; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); font:600 14.5px/1 var(--body); cursor:pointer}
+.satuan button[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.batang-harga{display:flex; align-items:flex-end; gap:10px; height:280px; border-bottom:2px solid var(--line)}
+.batang-harga button{flex:1; height:100%; display:flex; flex-direction:column; justify-content:flex-end; align-items:center; gap:8px; background:none; border:0; padding:0; cursor:pointer; color:var(--ink); font:inherit; min-width:0}
+.batang-harga .kolom{width:100%; max-width:84px; border-radius:8px 8px 0 0; background:var(--terpal); transition:height .45s ease, background .2s ease}
+.batang-harga button[aria-pressed="true"] .kolom{background:var(--lampu)}
+.batang-harga .nilai{font:700 14px/1.1 var(--display); text-align:center}
+.tahun-baris{display:flex; gap:10px; margin-top:8px}
+.tahun-baris span{flex:1; text-align:center; font-size:13px; color:var(--muted); min-width:0}
+.harga-detail{margin-top:16px; min-height:72px}
+.lini{list-style:none; padding:0; margin:0; display:grid; gap:10px}
+.lini button{width:100%; text-align:left; display:grid; grid-template-columns:96px 1fr; gap:12px; align-items:center; padding:12px 14px; min-height:56px; border-radius:var(--r-m); border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer; font:inherit}
+.lini button[aria-pressed="true"]{border-color:var(--lampu); box-shadow:inset 4px 0 0 var(--lampu)}
+.lini .era{font:700 14px/1.2 var(--display); color:var(--muted)}
+.lini b{font:700 18px/1.2 var(--display)}
+.lini-detail{margin-top:14px; padding:16px 18px; border-radius:var(--r-m); background:var(--surface-2); border:1px solid var(--line); min-height:120px}
+.lini-detail p+p{margin-top:8px}
+
+/* ---------- ekosistem ---------- */
+.aliran-tombol{display:flex; gap:8px; flex-wrap:wrap; margin-top:24px}
+.aliran-tombol button{min-height:44px; padding:0 18px; border-radius:999px; border:1.5px solid var(--line); color:var(--ink); font:600 15px/1 var(--body); cursor:pointer; display:inline-flex; align-items:center; gap:8px}
+.aliran-tombol button i{width:12px; height:12px; border-radius:50%; display:inline-block}
+.aliran-tombol button[aria-pressed="true"]{border-color:var(--ink); box-shadow:inset 0 0 0 1.5px var(--ink)}
+.peta-wadah{display:grid; grid-template-columns:1fr 320px; gap:24px; margin-top:18px; align-items:start}
+@media (max-width:980px){ .peta-wadah{grid-template-columns:1fr} }
+.peta{position:relative; aspect-ratio:1000/640; background:var(--bg); border:1px solid var(--line); border-radius:var(--r-l)}
+.peta svg{position:absolute; inset:0; width:100%; height:100%}
+.simpul{position:absolute; transform:translate(-50%,-50%); min-height:44px; width:max-content; max-width:132px; padding:8px 12px; border-radius:14px; border:1.5px solid var(--line); background:var(--surface); color:var(--ink); font:600 13px/1.25 var(--body); cursor:pointer; text-align:center; box-shadow:0 6px 16px -10px rgba(10,20,40,.4)}
+.simpul[aria-pressed="true"]{border-color:var(--lampu); box-shadow:0 0 0 3px color-mix(in srgb, var(--lampu) 45%, transparent)}
+.simpul.pusat{background:var(--ink); color:var(--bg); border-color:var(--ink); font:800 16px/1.1 var(--display); padding:14px 16px}
+.aliran path{fill:none; stroke-width:3; opacity:0; transition:opacity .3s ease}
+.aliran text{font:600 17px var(--body); opacity:0; transition:opacity .3s ease; paint-order:stroke; stroke:var(--bg); stroke-width:5px; stroke-linejoin:round}
+.aliran.tampil path,.aliran.tampil text{opacity:1}
+.aliran.tampil path.redup{opacity:.12} .aliran.tampil text.redup{opacity:0} .tanpa-label .aliran.tampil text{opacity:0}
+.aliran-uang path{stroke:var(--uang)} .aliran-uang text{fill:var(--uang)}
+.aliran-barang path{stroke:var(--barang)} .aliran-barang text{fill:var(--barang)}
+.aliran-data path{stroke:var(--data); stroke-dasharray:7 5} .aliran-data text{fill:var(--data)}
+.mk-uang{fill:var(--uang)} .mk-barang{fill:var(--barang)} .mk-data{fill:var(--data)}
+.peta-detail h3{font-size:22px}
+.peta-detail dl{margin:8px 0 0}
+.peta-detail dt{font-weight:700; margin-top:12px}
+.peta-detail dd{margin:4px 0 0; color:var(--muted)}
+.peta-detail ul{margin:6px 0 0; padding-left:18px; color:var(--muted)}
+.peta-daftar{display:none; gap:10px; list-style:none; padding:0; margin:18px 0 0}
+.peta-daftar li{padding:14px 16px; border-radius:var(--r-m); background:var(--bg); border:1px solid var(--line)}
+.peta-daftar b{display:block; font:700 17px/1.3 var(--display)}
+.peta-daftar span{display:block; color:var(--muted); font-size:15px; margin-top:4px}
+@media (max-width:720px){ .peta,.aliran-tombol,.peta-detail{display:none} .peta-daftar{display:grid} .peta-wadah{display:block} }
+
+/* ---------- dasbor pilot ---------- */
+.pilot-grid{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:32px; align-items:start}
+@media (max-width:900px){ .pilot-grid{grid-template-columns:1fr} }
+.preset{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:22px}
+.preset button{min-height:44px; padding:0 16px; border-radius:999px; border:1.5px solid var(--line); background:var(--bg); color:var(--ink); font:600 14.5px/1 var(--body); cursor:pointer}
+.preset button[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink)}
+.status-pilot{font:800 clamp(26px,3.4vw,36px)/1.1 var(--display)}
+.status-pilot.untung{color:var(--ok)} .status-pilot.rugi{color:var(--danger)}
+.meter-impas{position:relative; height:22px; border-radius:999px; background:var(--surface-2); margin:22px 0 8px}
+.meter-impas .isi{height:100%; border-radius:999px; background:var(--terpal); transition:width .3s ease; max-width:100%}
+.meter-impas .tanda{position:absolute; top:-7px; bottom:-7px; width:3px; margin-left:-1.5px; background:var(--ink); border-radius:2px; transition:left .3s ease}
+.meter-label{display:flex; justify-content:space-between; gap:12px; font-size:13.5px; color:var(--muted)}
+.angka-pilot{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:20px}
+@media (max-width:420px){ .angka-pilot{grid-template-columns:1fr} }
+.angka-pilot div{padding:14px; border-radius:var(--r-m); background:var(--surface-2)}
+.angka-pilot b{display:block; font:800 22px/1.15 var(--display)}
+.angka-pilot span{font-size:13.5px; color:var(--muted)}
+
+
+.sehari-grid>*,.sekarang-grid>*,.peta-wadah>*,.pilot-grid>*,.kalk>*,.warung-grid>*,.paygo>*,.produk-grid>*,.dua>*{min-width:0}
+@media (max-width:900px){ .sekarang-grid{grid-template-columns:minmax(0,1fr)} }
+@media (max-width:520px){ .grafik-sehari .sumbu,.grafik-sehari .label-padam{font-size:17px} .batang-harga,.tahun-baris{gap:6px} .batang-harga .nilai{font-size:11.5px} .tahun-baris span{font-size:11.5px} .kartu{padding:18px} .lini button{grid-template-columns:78px 1fr} }
 </style>
 </head>
 <body>
@@ -272,11 +404,12 @@ footer h3{font-size:18px; margin-bottom:8px}
       Solar-Port
     </a>
     <nav class="navi" aria-label="Navigasi utama">
+      <a href="#sehari">Sehari</a>
       <a href="#hitung">Hitung</a>
       <a href="#bayar">Cara bayar</a>
-      <a href="#warung">Untuk warung</a>
-      <a href="#paket">Paket</a>
-      <a href="#tanya">Tanya jawab</a>
+      <a href="#warung">Warung</a>
+      <a href="#ekosistem">Ekosistem</a>
+      <a href="#pilot">Pilot</a>
     </nav>
     <span class="lencana">Prototipe tugas kuliah</span>
   </div>
@@ -450,7 +583,7 @@ footer h3{font-size:18px; margin-bottom:8px}
 </section>
 
 <!-- ================= PRODUK ================= -->
-<section aria-labelledby="judul-produk" style="background:var(--surface); border-block:1px solid var(--line)">
+<section class="permukaan" aria-labelledby="judul-produk">
   <div class="wrap">
     <h2 id="judul-produk">Satu kit, lima bagian, nol bor.</h2>
     <p class="lead" style="margin-top:16px">Pilih bagian untuk melihat fungsinya.</p>
@@ -514,8 +647,69 @@ footer h3{font-size:18px; margin-bottom:8px}
   </div>
 </section>
 
+<!-- ================= 24 JAM ================= -->
+<section id="sehari" aria-labelledby="judul-sehari">
+  <div class="wrap">
+    <h2 id="judul-sehari" style="max-width:24ch">24 jam bersama <span style="white-space:nowrap">Solar-Port</span>.</h2>
+    <p class="lead" style="margin-top:16px">Geser jamnya. Siang hari baterai terisi dari sinar di balik kaca. Malam hari baterai dipakai untuk mengecas HP, dan lampu menyala sendiri begitu listrik padam.</p>
+    <form class="sehari-kendali" id="form-sehari" onsubmit="return false">
+      <fieldset>
+        <legend>Kejadian hari ini</legend>
+        <div class="pilihan">
+          <input type="radio" name="skenario" id="sk-biasa" value="biasa"><label for="sk-biasa">Hari biasa</label>
+          <input type="radio" name="skenario" id="sk-token" value="token" checked><label for="sk-token">Token habis 19.00 sampai pagi</label>
+          <input type="radio" name="skenario" id="sk-maghrib" value="maghrib"><label for="sk-maghrib">Padam 18.00–22.00</label>
+          <input type="radio" name="skenario" id="sk-subuh" value="subuh"><label for="sk-subuh">Padam subuh, seperti 3 Agustus 2026</label>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Cuaca</legend>
+        <div class="pilihan">
+          <input type="radio" name="cuaca-sehari" id="cs-cerah" value="1" checked><label for="cs-cerah">Cerah</label>
+          <input type="radio" name="cuaca-sehari" id="cs-berawan" value="0.6"><label for="cs-berawan">Berawan</label>
+          <input type="radio" name="cuaca-sehari" id="cs-hujan" value="0.3"><label for="cs-hujan">Hujan</label>
+        </div>
+      </fieldset>
+    </form>
+    <div class="sehari-geser">
+      <label for="jam-sehari" style="font-weight:700; display:block; margin-bottom:6px">Jam</label>
+      <div class="rentang"><input type="range" id="jam-sehari" min="0" max="96" step="1" value="58"><output for="jam-sehari" id="jam-sehari-teks">20.30</output></div>
+    </div>
+    <div class="sehari-grid">
+      <div class="kartu">
+        <div class="jendela-mini" id="jendela-mini" data-langit="malam" data-lampu="led" aria-hidden="true">
+          <div class="benda-langit"></div>
+          <div class="tembok"></div>
+          <div class="bingkai"><div class="kaca"><div class="strip"></div><div class="panel"></div></div></div>
+          <div class="hp-mini"></div>
+        </div>
+        <div class="baterai"><div class="baterai-badan"><div class="baterai-isi" id="baterai-isi"></div></div><div><div class="baterai-angka" id="baterai-angka">0%</div><div style="font-size:13.5px; color:var(--muted)">isi baterai 32 Wh</div></div></div>
+        <p class="sehari-status" id="sehari-status" aria-live="polite"></p>
+      </div>
+      <div class="kartu">
+        <svg class="grafik-sehari" id="grafik-sehari" viewBox="0 0 600 236" role="img" aria-labelledby="grafik-sehari-judul">
+          <title id="grafik-sehari-judul">Isi baterai Solar-Port dari pukul 06.00 sampai 06.00 keesokan harinya</title>
+        </svg>
+        <div class="legenda" aria-hidden="true">
+          <span><i style="background:var(--terpal)"></i>isi baterai</span>
+          <span><i style="background:var(--lampu); opacity:.4"></i>matahari</span>
+          <span><i style="background:var(--muted); opacity:.45"></i>PLN padam</span>
+          <span><i style="background:var(--terpal)"></i>HP dicas</span>
+          <span><i style="background:var(--lampu)"></i>lampu darurat</span>
+        </div>
+        <div class="ringkas" aria-live="polite">
+          <div><b id="rk-hp">75%</b><span>HP terisi malam ini</span></div>
+          <div><b id="rk-lampu">11 jam</b><span>lampu darurat menyala</span></div>
+          <div><b id="rk-sisa">13%</b><span>sisa baterai besok pagi</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="catatan">Asumsi rancangan: panel 15 W di balik kaca menghasilkan sekitar 22 Wh pada hari cerah, baterai 32 Wh tersisa 30% dari hari sebelumnya, HP dicas pukul 19.00–21.00 (sekitar ¾ cas), dan lampu LED 1 W menyala sendiri saat gelap dan listrik padam.</p>
+  </div>
+</section>
+
 <!-- ================= KALKULATOR ================= -->
-<section id="hitung" aria-labelledby="judul-hitung">
+<section id="hitung" class="permukaan" aria-labelledby="judul-hitung">
   <div class="wrap">
     <h2 id="judul-hitung">Cukup nggak untuk rumahmu?</h2>
     <p class="lead" style="margin-top:16px">Isi sesuai keadaan rumahmu. Hasilnya perkiraan kasar dari rancangan produk, bukan janji.</p>
@@ -567,8 +761,34 @@ footer h3{font-size:18px; margin-bottom:8px}
   </div>
 </section>
 
+<!-- ================= KENAPA SEKARANG ================= -->
+<section id="kenapa" aria-labelledby="judul-kenapa">
+  <div class="wrap">
+    <h2 id="judul-kenapa">Kenapa baru bisa sekarang?</h2>
+    <p class="lead" style="margin-top:16px">Ide listrik mandiri bukan hal baru. Yang baru adalah harganya: baterai sekarang jauh lebih murah, dan panel surya sudah ringan dan fleksibel.</p>
+    <div class="sekarang-grid">
+      <div class="kartu">
+        <div class="satuan" role="group" aria-label="Satuan harga">
+          <button type="button" id="sat-kwh" aria-pressed="true">Per kWh</button>
+          <button type="button" id="sat-modul" aria-pressed="false">Per baterai Solar-Port (32 Wh)</button>
+        </div>
+        <div class="batang-harga" id="batang-harga" role="group" aria-label="Harga paket baterai lithium-ion per tahun"></div>
+        <div class="tahun-baris" id="tahun-baris" aria-hidden="true"></div>
+        <p class="harga-detail" id="harga-detail" aria-live="polite"></p>
+        <p class="catatan">Harga rata-rata paket baterai lithium-ion dalam dolar AS per kWh. Angka 2010 dalam nilai riil 2025; angka lain sesuai survei tahun itu. Sumber: BloombergNEF, Lithium-Ion Battery Price Survey (2024, 2025). Baterai kecil per unit biasanya lebih mahal dari rata-rata industri.</p>
+      </div>
+      <div>
+        <h3>Teknologi yang datang tepat waktu</h3>
+        <p class="catatan" style="margin:6px 0 14px">Pilih satu masa untuk melihat apa yang membuatnya mungkin, dan apa yang membuatnya tergeser.</p>
+        <ul class="lini" id="lini"></ul>
+        <div class="lini-detail" id="lini-detail" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= BAYAR HARIAN ================= -->
-<section id="bayar" aria-labelledby="judul-bayar" style="background:var(--surface); border-block:1px solid var(--line)">
+<section id="bayar" class="permukaan" aria-labelledby="judul-bayar">
   <div class="wrap">
     <h2 id="judul-bayar">Bayarnya harian, kayak beli pulsa.</h2>
     <p class="lead" style="margin-top:16px">Coba sendiri: bayar di warung, terima kode lewat SMS, ketik di modul. Kalau lewat sehari tanpa bayar, kit cuma terkunci. Tidak ada denda, tidak ada penagih.</p>
@@ -663,8 +883,68 @@ footer h3{font-size:18px; margin-bottom:8px}
   </div>
 </section>
 
+<!-- ================= EKOSISTEM ================= -->
+<section id="ekosistem" class="permukaan" aria-labelledby="judul-ekosistem">
+  <div class="wrap">
+    <h2 id="judul-ekosistem">Satu solusi, banyak mitra.</h2>
+    <p class="lead" style="margin-top:16px">Solar-Port tidak berjalan sendirian. Pilih satu pihak untuk melihat apa yang ia berikan dan dapatkan, lalu pilih aliran yang mau dilihat: uang, barang, atau data.</p>
+    <div class="aliran-tombol" role="group" aria-label="Jenis aliran">
+      <button type="button" data-aliran="uang" aria-pressed="true"><i style="background:var(--uang)"></i>Uang</button>
+      <button type="button" data-aliran="barang" aria-pressed="false"><i style="background:var(--barang)"></i>Barang</button>
+      <button type="button" data-aliran="data" aria-pressed="false"><i style="background:var(--data)"></i>Data</button>
+    </div>
+    <div class="peta-wadah">
+      <div class="peta" id="peta">
+        <svg viewBox="0 0 1000 640" aria-hidden="true" id="peta-svg"></svg>
+      </div>
+      <div class="kartu peta-detail" id="peta-detail" aria-live="polite"></div>
+    </div>
+    <ul class="peta-daftar" id="peta-daftar"></ul>
+  </div>
+</section>
+
+<!-- ================= DASBOR PILOT ================= -->
+<section id="pilot" aria-labelledby="judul-pilot">
+  <div class="wrap">
+    <h2 id="judul-pilot">Dasbor pilot: kapan impas, butuh modal berapa?</h2>
+    <p class="lead" style="margin-top:16px">Ubah asumsinya dan lihat apakah model bisnisnya masih berjalan. Angka dasarnya sama dengan paper kami.</p>
+    <div class="pilot-grid">
+      <form class="kartu" id="form-pilot" onsubmit="return false">
+        <div class="preset" role="group" aria-label="Skenario">
+          <button type="button" data-preset="dasar" aria-pressed="true">Skenario paper</button>
+          <button type="button" data-preset="pesimis" aria-pressed="false">Pesimis</button>
+          <button type="button" data-preset="optimis" aria-pressed="false">Optimis</button>
+        </div>
+        <fieldset><legend><label for="p-warung">Warung mitra</label></legend>
+          <div class="rentang"><input type="range" id="p-warung" min="50" max="300" step="10" value="150"><output for="p-warung" id="p-warung-teks">150</output></div></fieldset>
+        <fieldset><legend><label for="p-kit">Kit terjual per warung per bulan</label></legend>
+          <div class="rentang"><input type="range" id="p-kit" min="0.5" max="5" step="0.5" value="2.5"><output for="p-kit" id="p-kit-teks">2,5</output></div></fieldset>
+        <fieldset><legend><label for="p-cicil">Pembeli yang memilih cicilan</label></legend>
+          <div class="rentang"><input type="range" id="p-cicil" min="50" max="90" step="5" value="70"><output for="p-cicil" id="p-cicil-teks">70%</output></div></fieldset>
+        <fieldset><legend><label for="p-gagal">Gagal bayar</label></legend>
+          <div class="rentang"><input type="range" id="p-gagal" min="5" max="25" step="1" value="10"><output for="p-gagal" id="p-gagal-teks">10%</output></div></fieldset>
+        <fieldset style="margin-bottom:0"><legend><label for="p-biaya">Biaya produksi per kit</label></legend>
+          <div class="rentang"><input type="range" id="p-biaya" min="180000" max="260000" step="10000" value="210000"><output for="p-biaya" id="p-biaya-teks">Rp 210.000</output></div></fieldset>
+      </form>
+      <div class="kartu" aria-live="polite">
+        <div class="status-pilot" id="status-pilot">Sekitar titik impas</div>
+        <p class="hasil-label" id="status-pilot-ket" style="margin-top:8px"></p>
+        <div class="meter-impas" aria-hidden="true"><div class="isi" id="meter-isi"></div><div class="tanda" id="meter-tanda"></div></div>
+        <div class="meter-label"><span id="meter-vol">Penjualan 375 kit/bulan</span><span id="meter-be">Titik impas ± 379</span></div>
+        <div class="angka-pilot">
+          <div><b id="pa-kontribusi">Rp 79.225</b><span>sisa rata-rata per kit</span></div>
+          <div><b id="pa-laba">−Rp 0,3 jt</b><span>laba operasional per bulan</span></div>
+          <div><b id="pa-modal">Rp 288 jt</b><span>modal kerja yang tertahan</span></div>
+          <div><b id="pa-balik">8,1 bulan</b><span>modal satu kit cicilan kembali</span></div>
+        </div>
+        <p class="catatan">Model sederhana dari angka paper: cicilan Rp 1.250 × 365 hari, harga tunai Rp 325.000, komisi warung 10% (tunai 5%), biaya operasional Rp 67.000 per kit cicilan, biaya tetap Rp 360 juta per tahun. Modal kerja dihitung pada penjualan bulanan yang stabil. Angka untuk diskusi, bukan proyeksi resmi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ================= PAKET ================= -->
-<section id="paket" aria-labelledby="judul-paket" style="background:var(--surface); border-block:1px solid var(--line)">
+<section id="paket" class="permukaan" aria-labelledby="judul-paket">
   <div class="wrap">
     <h2 id="judul-paket">Pilih yang pas.</h2>
     <div class="label-harga">
@@ -719,7 +999,7 @@ footer h3{font-size:18px; margin-bottom:8px}
 </section>
 
 <!-- ================= TANYA JAWAB ================= -->
-<section id="tanya" aria-labelledby="judul-tanya" style="background:var(--surface); border-block:1px solid var(--line)">
+<section id="tanya" class="permukaan" aria-labelledby="judul-tanya">
   <div class="wrap">
     <h2 id="judul-tanya">Tanya jawab</h2>
     <div class="tanya">
@@ -933,6 +1213,218 @@ footer h3{font-size:18px; margin-bottom:8px}
     balasan.hidden = false;
     balasan.innerHTML = '<b>Terima kasih, ' + aman(nama) + ' di ' + aman(kel) + '.</b> Di versi nyata, langkah berikutnya:<ol><li>Tim datang melihat lokasi dan arah jendela warung.</li><li>Pelatihan 30 menit: cara demo, menerima bayaran, dan mengirim kode.</li><li>Kit demo dan stok awal dititipkan, tanpa modal.</li></ol>';
   });
+
+  /* ---------- 24 jam bersama Solar-Port ---------- */
+  (function(){
+    var CAP = 32, SOC0 = 0.30 * CAP, LANGKAH = 96;
+    var PADAM = { biasa: [], token: [[52, 96]], maghrib: [[48, 64]], subuh: [[92, 96]] };
+    var formS = document.getElementById('form-sehari'), geser = document.getElementById('jam-sehari'), svg = document.getElementById('grafik-sehari');
+    function jamDari(s){ var m = (6 * 60 + s * 15) % 1440, h = Math.floor(m / 60), mm = m % 60; return (h < 10 ? '0' : '') + h + '.' + (mm < 10 ? '0' : '') + mm; }
+    function jamDesimal(s){ return (6 + s / 4) % 24; }
+    function gelap(s){ var h = jamDesimal(s); return h >= 18 || h < 6; }
+    function padamPada(sk, s){ return PADAM[sk].some(function(r){ return s >= r[0] && s < r[1]; }); }
+    function simulasi(sk, faktor){
+      var E = 22 * faktor, pmax = E * Math.PI / 24, cur = SOC0;
+      var soc = [SOC0], led = [], hp = [], hpWh = 0, ledWh = 0, ledButuh = 0;
+      for (var s = 0; s < LANGKAH; s++){
+        var h = 6 + s / 4 + 0.125;
+        var prod = h < 18 ? pmax * Math.sin(Math.PI * (h - 6) / 12) * 0.25 : 0;
+        cur = Math.min(CAP, cur + prod);
+        var bLed = (padamPada(sk, s) && gelap(s)) ? 0.25 : 0, bHp = (s >= 52 && s < 60) ? 16.5 / 8 : 0;
+        var dLed = Math.min(bLed, cur); cur -= dLed;
+        var dHp = Math.min(bHp, cur); cur -= dHp;
+        ledButuh += bLed; ledWh += dLed; hpWh += dHp;
+        led.push(bLed > 0 && dLed >= bLed - 1e-9); hp.push(dHp > 0.01);
+        soc.push(cur);
+      }
+      return { soc: soc, led: led, hp: hp, hpWh: hpWh, ledJam: ledWh, ledButuh: ledButuh };
+    }
+    function x(s){ return 66 + s * 514 / LANGKAH; }
+    function y(p){ return 186 - p * 1.46; }
+    function gambar(sk, r, s){
+      var o = [];
+      o.push('<title id="grafik-sehari-judul">Isi baterai Solar-Port dari pukul 06.00 sampai 06.00 keesokan harinya</title>');
+      o.push('<rect class="pita-siang" x="' + x(0) + '" y="34" width="' + (x(48) - x(0)) + '" height="152"/>');
+      PADAM[sk].forEach(function(p){ o.push('<rect class="pita-padam" x="' + x(p[0]) + '" y="34" width="' + (x(p[1]) - x(p[0])) + '" height="152"/>'); o.push('<text class="label-padam" x="' + (x(p[0]) + 5) + '" y="50">PLN padam</text>'); });
+      [0, 50, 100].forEach(function(p){ o.push('<line class="garis-bantu" x1="66" x2="580" y1="' + y(p) + '" y2="' + y(p) + '"/><text class="sumbu" x="58" y="' + (y(p) + 4) + '" text-anchor="end">' + p + '%</text>'); });
+      [[0,'06.00'],[24,'12.00'],[48,'18.00'],[72,'24.00'],[96,'06.00']].forEach(function(t){ o.push('<text class="sumbu" x="' + x(t[0]) + '" y="232" text-anchor="middle">' + t[1] + '</text>'); });
+      o.push('<text class="sumbu" x="58" y="203" text-anchor="end">HP</text><text class="sumbu" x="58" y="219" text-anchor="end">LED</text>');
+      o.push('<polyline class="soc" points="' + r.soc.map(function(v, i){ return x(i).toFixed(1) + ',' + y(v / CAP * 100).toFixed(1); }).join(' ') + '"/>');
+      r.hp.forEach(function(on, i){ if (on) o.push('<rect class="pita-hp" x="' + x(i).toFixed(1) + '" y="196" width="' + (x(i + 1) - x(i) + 0.4).toFixed(1) + '" height="8"/>'); });
+      r.led.forEach(function(on, i){ if (on) o.push('<rect class="pita-led" x="' + x(i).toFixed(1) + '" y="208" width="' + (x(i + 1) - x(i) + 0.4).toFixed(1) + '" height="8"/>'); });
+      o.push('<line class="kursor" x1="' + x(s) + '" x2="' + x(s) + '" y1="34" y2="218"/>');
+      o.push('<circle class="titik-kursor" cx="' + x(s) + '" cy="' + y(r.soc[s] / CAP * 100) + '" r="5"/>');
+      svg.innerHTML = o.join('');
+    }
+    function perbarui(){
+      var sk = formS.querySelector('input[name="skenario"]:checked').value;
+      var f = parseFloat(formS.querySelector('input[name="cuaca-sehari"]:checked').value);
+      var s = parseInt(geser.value, 10), i = Math.min(s, LANGKAH - 1);
+      var r = simulasi(sk, f);
+      gambar(sk, r, s);
+      var socP = Math.round(r.soc[s] / CAP * 100);
+      document.getElementById('jam-sehari-teks').textContent = jamDari(s);
+      var isi = document.getElementById('baterai-isi'); isi.style.width = socP + '%'; isi.classList.toggle('rendah', socP < 15);
+      document.getElementById('baterai-angka').textContent = socP + '%';
+      var h = jamDesimal(s), padam = padamPada(sk, i), gel = gelap(i);
+      var langit = (h >= 7 && h < 17) ? 'siang' : (h >= 17 && h < 19) ? 'senja' : (h >= 5 && h < 7) ? 'fajar' : 'malam';
+      var lampu = !gel ? 'mati' : (padam ? (r.soc[s] > 0.05 ? 'led' : 'gelap') : 'pln');
+      var jm = document.getElementById('jendela-mini');
+      jm.setAttribute('data-langit', langit); jm.setAttribute('data-lampu', lampu); jm.classList.toggle('cas', r.hp[i]);
+      var teks = ['Pukul ' + jamDari(s) + '.', padam ? 'Listrik PLN padam.' : 'Listrik PLN menyala.'];
+      if (gel) teks.push(lampu === 'led' ? 'Lampu darurat menyala sendiri.' : lampu === 'gelap' ? 'Baterai habis, lampu darurat ikut padam.' : 'Lampu rumah memakai listrik PLN.');
+      else if (h >= 6 && h < 18) teks.push('Panel di kaca sedang mengisi baterai.');
+      if (r.hp[i]) teks.push('HP sedang dicas dari Solar-Port.');
+      document.getElementById('sehari-status').textContent = teks.join(' ');
+      document.getElementById('rk-hp').textContent = Math.round(r.hpWh / 22 * 100) + '%';
+      var lj = Math.round(r.ledJam * 10) / 10, lb = Math.round(r.ledButuh * 10) / 10;
+      document.getElementById('rk-lampu').textContent = lj.toLocaleString('id-ID') + (lj < lb ? ' dari ' + lb.toLocaleString('id-ID') : '') + ' jam';
+      document.getElementById('rk-sisa').textContent = Math.round(r.soc[LANGKAH] / CAP * 100) + '%';
+    }
+    formS.querySelectorAll('input').forEach(function(el){ el.addEventListener('change', perbarui); });
+    geser.addEventListener('input', perbarui);
+    perbarui();
+  })();
+
+  /* ---------- kenapa sekarang ---------- */
+  (function(){
+    var DATA = [
+      {lab:'2010', v:1474, teks:'Pada 2010, rata-rata harga paket baterai lithium-ion sekitar US$1.474 per kWh (nilai riil 2025). Untuk baterai seukuran Solar-Port (32 Wh), setara sekitar US$47.'},
+      {lab:'2023', v:139, teks:'Pada 2023, rata-ratanya US$139 per kWh.'},
+      {lab:'2024', v:115, teks:'Pada 2024, harganya turun 20% dalam setahun menjadi US$115 per kWh.'},
+      {lab:'2025', v:108, teks:'Pada 2025, rekor terendah US$108 per kWh, atau 93% lebih murah daripada 2010.'},
+      {lab:'2025, LFP', v:81, teks:'Paket LFP, jenis baterai yang dipakai Solar-Port, rata-rata US$81 per kWh pada 2025. Untuk 32 Wh, sekitar US$2,6.'}
+    ];
+    var mode = 'kwh', pilih = 4, wadah = document.getElementById('batang-harga'), tahun = document.getElementById('tahun-baris'), detail = document.getElementById('harga-detail');
+    function fmt(v){ return mode === 'kwh' ? 'US$' + Math.round(v).toLocaleString('id-ID') : 'US$' + (Math.round(v * 0.032 * 10) / 10).toLocaleString('id-ID', {minimumFractionDigits:1, maximumFractionDigits:1}); }
+    function render(fokus){
+      wadah.innerHTML = DATA.map(function(d, i){
+        var t = Math.max(1.5, d.v / 1474 * 100) * 0.84;
+        return '<button type="button" data-i="' + i + '" aria-pressed="' + (i === pilih) + '" aria-label="' + d.lab + ', ' + fmt(d.v) + (mode === 'kwh' ? ' per kWh' : ' per baterai 32 Wh') + '"><span class="nilai">' + fmt(d.v) + '</span><span class="kolom" style="height:' + t + '%"></span></button>';
+      }).join('');
+      tahun.innerHTML = DATA.map(function(d){ return '<span>' + d.lab + '</span>'; }).join('');
+      detail.textContent = DATA[pilih].teks;
+      wadah.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', function(){ pilih = +b.dataset.i; render(true); }); });
+      if (fokus) wadah.querySelector('[data-i="' + pilih + '"]').focus();
+    }
+    var bk = document.getElementById('sat-kwh'), bm = document.getElementById('sat-modul');
+    bk.addEventListener('click', function(){ mode = 'kwh'; bk.setAttribute('aria-pressed','true'); bm.setAttribute('aria-pressed','false'); render(); });
+    bm.addEventListener('click', function(){ mode = 'modul'; bm.setAttribute('aria-pressed','true'); bk.setAttribute('aria-pressed','false'); render(); });
+    render();
+
+    var LINI = [
+      {era:'1990-an', nama:'Wartel', mungkin:'telepon rumah belum merata, jadi orang antre di warung telekomunikasi untuk menelepon jarak jauh.', label:'Tergeser karena:', geser:'HP menjadi murah dan dimiliki hampir semua orang.'},
+      {era:'2000-an', nama:'Warnet', mungkin:'komputer dan internet rumah masih mahal, jadi akses internet dibeli per jam.', label:'Tergeser karena:', geser:'paket data dan HP pintar menjadi murah.'},
+      {era:'2010-an', nama:'Ojek online', mungkin:'peta digital, GPS, dan HP pintar yang murah membuat jarak dan tarif bisa dihitung tanpa tawar-menawar.', label:'Bertahan karena:', geser:'jalanan makin macet dan kebutuhan antar cepat terus ada.'},
+      {era:'Sekarang', nama:'Solar-Port', mungkin:'baterai LFP jauh lebih murah, panel surya ringan dan fleksibel, dan pembayaran kecil bisa dilakukan lewat warung, QRIS, dan kode SMS.', label:'Risikonya:', geser:'bisa tergeser kalau listrik PLN di kampung padat menjadi stabil dan legal, atau power bank makin murah. Karena itu modulnya dibuat bisa ditambah: kipas DC, lampu ekstra, atau baterai yang lebih besar.'}
+    ];
+    var lp = 3, ul = document.getElementById('lini'), ld = document.getElementById('lini-detail');
+    function renderLini(fokus){
+      ul.innerHTML = LINI.map(function(d, i){ return '<li><button type="button" data-i="' + i + '" aria-pressed="' + (i === lp) + '"><span class="era">' + d.era + '</span><b>' + d.nama + '</b></button></li>'; }).join('');
+      var d = LINI[lp];
+      ld.innerHTML = '<p><b>Mungkin karena:</b> ' + d.mungkin + '</p><p><b>' + d.label + '</b> ' + d.geser + '</p>';
+      ul.querySelectorAll('button').forEach(function(b){ b.addEventListener('click', function(){ lp = +b.dataset.i; renderLini(true); }); });
+      if (fokus) ul.querySelector('[data-i="' + lp + '"]').focus();
+    }
+    renderLini();
+  })();
+
+  /* ---------- peta ekosistem ---------- */
+  (function(){
+    var N = {
+      pusat:{x:500,y:320,nama:'Solar-Port',beri:'Produk, garansi tukar 1 tahun, kode buka lewat SMS, dan pelatihan untuk warung.',dapat:'Cicilan harian, penjualan tunai, dan pembelian tier Lite lewat program.'},
+      rumah:{x:500,y:70,nama:'Rumah tangga penyewa',beri:'Cicilan Rp 1.250 sehari, dibayar di warung.',dapat:'HP tetap hidup, lampu aman saat padam, dan kit jadi milik sendiri setelah 12 bulan.'},
+      warung:{x:813,y:164,nama:'Warung mitra',beri:'Tempat demo, penjualan, penerimaan cicilan, dan edukasi pemakaian.',dapat:'Komisi 10% dari tiap cicilan, pembeli yang datang setiap hari, dan bisa menjadi pos cas.'},
+      ojol:{x:890,y:376,nama:'Komunitas ojol dan RT/RW',beri:'Pesanan borongan dan tempat demonstrasi.',dapat:'HP tetap online saat padam dan pos cas di pangkalan.'},
+      pemasok:{x:674,y:545,nama:'Pemasok dan perakit',beri:'Panel, sel baterai LFP, dan perakitan lokal di Jabodetabek.',dapat:'Saluran pasar baru di segmen yang belum terlayani.'},
+      koperasi:{x:326,y:545,nama:'Koperasi dan microfinance',beri:'Modal kerja, sekitar Rp 290 juta pada titik impas.',dapat:'Angsuran kecil yang rutin, dengan catatan pembayaran yang transparan.'},
+      csr:{x:110,y:376,nama:'CSR dan dana desa',beri:'Dana untuk kit Lite bagi keluarga yang paling membutuhkan.',dapat:'Program sosial yang dampaknya bisa diukur.'},
+      pln:{x:187,y:164,nama:'PLN dan pemda',beri:'Dukungan program di kawasan padat.',dapat:'Berkurangnya sambungan liar yang berbahaya, kerugian jaringan, dan risiko kebakaran.'}
+    };
+    var F = [
+      ['rumah','warung','uang','Rp 1.250/hari'], ['warung','pusat','uang','90% cicilan'], ['koperasi','pusat','uang','modal kerja'], ['pusat','koperasi','uang','angsuran'], ['csr','pusat','uang','beli kit Lite'], ['pusat','pemasok','uang','bayar komponen'], ['ojol','warung','uang','jasa cas'],
+      ['pemasok','pusat','barang','komponen dan rakitan'], ['pusat','warung','barang','kit dan stok demo'], ['warung','rumah','barang','kit Solar-Port'], ['warung','ojol','barang','listrik untuk cas'], ['pusat','rumah','barang','kit Lite lewat program'],
+      ['pusat','rumah','data','kode buka lewat SMS'], ['warung','pusat','data','catatan bayar'], ['pusat','koperasi','data','riwayat bayar, dengan izin'], ['pusat','csr','data','laporan dampak'], ['pusat','pln','data','laporan keselamatan']
+    ];
+    var JENIS = ['uang','barang','data'], TANDA = {uang:1, barang:-1, data:0};
+    var svgP = document.getElementById('peta-svg'), peta = document.getElementById('peta'), detailP = document.getElementById('peta-detail');
+    var html = '<defs>' + JENIS.map(function(t){ return '<marker id="mk-' + t + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path class="mk-' + t + '" d="M0 0L10 5L0 10z"/></marker>'; }).join('') + '</defs>';
+    var grup = {uang:[], barang:[], data:[]};
+    F.forEach(function(f){
+      var a = N[f[0]], b = N[f[1]], dx = b.x - a.x, dy = b.y - a.y, L = Math.sqrt(dx * dx + dy * dy), ux = dx / L, uy = dy / L;
+      var tepi = function(k){ var hw = k === 'pusat' ? 82 : 92, hh = 44; return Math.min(Math.abs(ux) > 1e-6 ? hw / Math.abs(ux) : 1e9, Math.abs(uy) > 1e-6 ? hh / Math.abs(uy) : 1e9) + 10; };
+      var ra = tepi(f[0]), rb = tepi(f[1]);
+      var x1 = a.x + ux * ra, y1 = a.y + uy * ra, x2 = b.x - ux * rb, y2 = b.y - uy * rb;
+      var kanon = f[0] < f[1], nx = kanon ? -uy : uy, ny = kanon ? ux : -ux;
+      var o = TANDA[f[2]] * (26 + (kanon ? 0 : 34));
+      if (f[2] === 'data') o = kanon ? 0 : 30;
+      var cx = (x1 + x2) / 2 + nx * o, cy = (y1 + y2) / 2 + ny * o;
+      var t = {uang:0.5, barang:0.32, data:0.68}[f[2]] + (kanon ? 0 : 0.1), u = 1 - t;
+      var mx = u * u * x1 + 2 * u * t * cx + t * t * x2, my = u * u * y1 + 2 * u * t * cy + t * t * y2;
+      grup[f[2]].push('<path data-a="' + f[0] + '" data-b="' + f[1] + '" d="M' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' Q' + cx.toFixed(1) + ' ' + cy.toFixed(1) + ' ' + x2.toFixed(1) + ' ' + y2.toFixed(1) + '" marker-end="url(#mk-' + f[2] + ')"/><text data-a="' + f[0] + '" data-b="' + f[1] + '" x="' + mx.toFixed(1) + '" y="' + (my + 4).toFixed(1) + '" text-anchor="middle">' + f[3] + '</text>');
+    });
+    JENIS.forEach(function(t){ html += '<g class="aliran aliran-' + t + '" data-tipe="' + t + '">' + grup[t].join('') + '</g>'; });
+    svgP.innerHTML = html;
+    var pilihN = 'warung', aktif = {uang:true, barang:false, data:false};
+    Object.keys(N).forEach(function(k){
+      var n = N[k], b = document.createElement('button');
+      b.type = 'button'; b.className = 'simpul' + (k === 'pusat' ? ' pusat' : ''); b.textContent = n.nama; b.dataset.k = k;
+      b.style.left = (n.x / 10) + '%'; b.style.top = (n.y / 6.4) + '%';
+      b.addEventListener('click', function(){ pilihN = k; segarkan(); });
+      peta.appendChild(b);
+    });
+    document.querySelectorAll('.aliran-tombol button').forEach(function(btn){
+      btn.addEventListener('click', function(){ var t = btn.dataset.aliran; aktif = {uang:false, barang:false, data:false}; aktif[t] = true; document.querySelectorAll('.aliran-tombol button').forEach(function(x){ x.setAttribute('aria-pressed', x === btn ? 'true' : 'false'); }); segarkan(); });
+    });
+    function segarkan(){
+      peta.querySelectorAll('.simpul').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.k === pilihN ? 'true' : 'false'); });
+      svgP.querySelectorAll('.aliran').forEach(function(g){ g.classList.toggle('tampil', !!aktif[g.dataset.tipe]); });
+      svgP.classList.toggle('tanpa-label', pilihN === 'pusat');
+      svgP.querySelectorAll('.aliran path, .aliran text').forEach(function(el){ el.classList.toggle('redup', !(el.dataset.a === pilihN || el.dataset.b === pilihN)); });
+      var n = N[pilihN];
+      var terkait = F.filter(function(f){ return (f[0] === pilihN || f[1] === pilihN) && aktif[f[2]]; }).map(function(f){ return (f[0] === pilihN ? 'Ke ' + N[f[1]].nama : 'Dari ' + N[f[0]].nama) + ': ' + f[3] + ' (' + f[2] + ')'; });
+      detailP.innerHTML = '<h3>' + n.nama + '</h3><dl><dt>Memberi</dt><dd>' + n.beri + '</dd><dt>Mendapat</dt><dd>' + n.dapat + '</dd></dl>' + (terkait.length ? '<p style="margin-top:14px; font-weight:700">Aliran yang tampil</p><ul>' + terkait.map(function(t){ return '<li>' + t + '</li>'; }).join('') + '</ul>' : '<p class="catatan">Pihak ini tidak punya aliran jenis ini. Coba pilih aliran lain.</p>');
+    }
+    document.getElementById('peta-daftar').innerHTML = Object.keys(N).map(function(k){ var n = N[k]; return '<li><b>' + n.nama + '</b><span>Memberi: ' + n.beri + '</span><span>Mendapat: ' + n.dapat + '</span></li>'; }).join('');
+    segarkan();
+  })();
+
+  /* ---------- dasbor pilot ---------- */
+  (function(){
+    var el = function(id){ return document.getElementById(id); };
+    var pw = el('p-warung'), pk = el('p-kit'), pc = el('p-cicil'), pg = el('p-gagal'), pb = el('p-biaya');
+    var PRE = { dasar:[150, 2.5, 70, 10, 210000], pesimis:[150, 2, 70, 20, 250000], optimis:[200, 3, 70, 8, 200000] };
+    var REV = 1250 * 365, TETAP = 30000000;
+    function juta(n){ var a = Math.abs(n) / 1e6; return (n < 0 ? '−' : '') + 'Rp ' + a.toLocaleString('id-ID', {maximumFractionDigits: a < 10 ? 1 : 0}) + ' jt'; }
+    function hitung(){
+      var w = +pw.value, k = +pk.value, s = +pc.value / 100, d = +pg.value / 100, kit = +pb.value;
+      el('p-warung-teks').textContent = w; el('p-kit-teks').textContent = k.toLocaleString('id-ID'); el('p-cicil-teks').textContent = Math.round(s * 100) + '%'; el('p-gagal-teks').textContent = Math.round(d * 100) + '%'; el('p-biaya-teks').textContent = rp(kit);
+      var cpg = REV - kit - 0.10 * REV - d * REV - 67000, ctu = 325000 - kit - 16250 - 40000, rata = s * cpg + (1 - s) * ctu;
+      var vol = w * k, laba = vol * rata - TETAP, be = rata > 0 ? TETAP / rata : Infinity;
+      var U = kit + 30000, net = REV / 12 * (1 - d) * 0.9 - 15000 / 12, wc = 0;
+      for (var a = 0; a < 12; a++) wc += Math.max(0, U - net * a);
+      wc *= vol * s;
+      var bulan = net > 0 ? U / net : Infinity, st = el('status-pilot'), ket = el('status-pilot-ket');
+      if (rata <= 0){ st.textContent = 'Rugi di setiap kit'; st.className = 'status-pilot rugi'; ket.textContent = 'Dengan asumsi ini, setiap kit yang terjual justru menambah kerugian. Biaya kit atau gagal bayar harus turun.'; }
+      else if (Math.abs(laba) < 1000000){ st.textContent = 'Sekitar titik impas'; st.className = 'status-pilot'; ket.textContent = 'Penjualan hampir persis menutup biaya tetap Rp 30 juta per bulan.'; }
+      else if (laba > 0){ st.textContent = 'Di atas titik impas'; st.className = 'status-pilot untung'; ket.textContent = 'Penjualan sudah menutup biaya tetap, dan sisanya menjadi laba operasional.'; }
+      else { st.textContent = 'Di bawah titik impas'; st.className = 'status-pilot rugi'; ket.textContent = 'Butuh sekitar ' + Math.ceil(be).toLocaleString('id-ID') + ' kit per bulan, atau ' + (Math.ceil(be / w * 10) / 10).toLocaleString('id-ID') + ' kit per warung, supaya impas.'; }
+      var skala = Math.max(isFinite(be) ? be * 1.5 : 0, vol * 1.15, 100);
+      el('meter-isi').style.width = Math.min(100, vol / skala * 100) + '%';
+      el('meter-tanda').style.left = (isFinite(be) ? Math.min(100, be / skala * 100) : 100) + '%';
+      el('meter-vol').textContent = 'Penjualan ' + Math.round(vol).toLocaleString('id-ID') + ' kit/bulan';
+      el('meter-be').textContent = isFinite(be) ? 'Titik impas ± ' + Math.ceil(be).toLocaleString('id-ID') : 'Tidak bisa impas';
+      el('pa-kontribusi').textContent = rata < 0 ? '−' + rp(-rata) : rp(rata);
+      el('pa-laba').textContent = juta(laba);
+      el('pa-modal').textContent = juta(wc);
+      el('pa-balik').textContent = isFinite(bulan) && bulan <= 12 ? (Math.round(bulan * 10) / 10).toLocaleString('id-ID') + ' bulan' : 'Lebih dari 12 bulan';
+    }
+    function setPreset(nama){ var p = PRE[nama]; pw.value = p[0]; pk.value = p[1]; pc.value = p[2]; pg.value = p[3]; pb.value = p[4]; document.querySelectorAll('.preset button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.preset === nama ? 'true' : 'false'); }); hitung(); }
+    document.querySelectorAll('.preset button').forEach(function(b){ b.addEventListener('click', function(){ setPreset(b.dataset.preset); }); });
+    [pw, pk, pc, pg, pb].forEach(function(x){ x.addEventListener('input', function(){ document.querySelectorAll('.preset button').forEach(function(b){ b.setAttribute('aria-pressed','false'); }); hitung(); }); });
+    hitung();
+  })();
+
 })();
 </script>
 </body>
